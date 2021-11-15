@@ -23,7 +23,7 @@ public class MailService implements Serializable {
 				if (p.getCliente() != null) {
 					if (StringUtils.isNotBlank(p.getCliente().getEmail())) {
 						
-						mail.getEmail().setFrom("joaoftnunes1@gmail.com", " Restaurante Manager");
+						mail.getEmail().setFrom("adail101@hotmail.com", " Restaurante Manager");
 						mail.getEmail().setDebug(true);
 						mail.getEmail().setSubject("Pedido " + format.format(p.getData()) + " - Restaurante Manager");
 						mail.getEmail().setHtmlMsg(formatarPedido(p));

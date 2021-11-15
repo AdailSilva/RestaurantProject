@@ -20,7 +20,6 @@ public class AppUserDetailsService implements UserDetailsService {
 
 	public AppUserDetailsService() {
 		System.out.println("Construtor chamado");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

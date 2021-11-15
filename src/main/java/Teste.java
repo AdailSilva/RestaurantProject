@@ -13,8 +13,8 @@ public class Teste {
 
 	public static void main(String[] args) {
 		Properties props = new Properties();
-		/** Parâmetros de conexão com servidor Gmail */
-		props.put("mail.smtp.host", "smtp.gmail.com");
+		/** Parâmetros de conexão com servidor Outlook */
+		props.put("mail.smtp.host", "smtp.hotmail.com");
 		props.put("mail.smtp.socketFactory.port", "465");
 		props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		props.put("mail.smtp.auth", "true");
@@ -22,7 +22,7 @@ public class Teste {
 
 		Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("joaoftnunes1@gmail.com", "823a5320");
+				return new PasswordAuthentication("adail101@hotmail.com", "@Hacker101");
 			}
 		});
 		/** Ativa Debug para sessão */
@@ -30,10 +30,10 @@ public class Teste {
 		try {
 
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("joaoftnunes1@gmail.com")); // Remetente
+			message.setFrom(new InternetAddress("adailsilva@gmail.com")); // Remetente
 
 			Address[] toUser = InternetAddress // Destinatário(s)
-					.parse("joaoftnunes1@gmail.com, joaoftnunes@gmail.com");
+					.parse("adail101@hotmail.com, adail101@hotmail.com");
 			message.setRecipients(Message.RecipientType.TO, toUser);
 			message.setSubject("Testando");// Assunto
 			message.setText("Enviei este email utilizando JavaMail com minha conta GMail ! <h1>Hello world</h1>");

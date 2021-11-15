@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -69,6 +68,7 @@ public class MainlyClassJava implements Serializable {
 		// m2.setMenuPai(m);
 		//
 		// manager.merge(m2);
+		@SuppressWarnings("removal")
 		Menu mp = manager.find(Menu.class, new Long(1));
 		// Menu m = new Menu();
 		// m.setDescricao("com gás");

@@ -19,15 +19,15 @@ public class MailConfig implements Serializable {
 
 	public MailConfig() {
 		email.setSSLOnConnect(true);
-		email.setHostName("smtp.gmail.com");
+		email.setHostName("smtp.hotmail.com");
 		email.setSslSmtpPort("465");
-		email.setAuthenticator(new DefaultAuthenticator("joaoftnunes1@gmail.com", "823a5320"));
+		email.setAuthenticator(new DefaultAuthenticator("adail101@hotmail.com", "@Hacker101"));
 	}
 
 //	public void sendMail(String destinatárioMail, String assunto, String mensagem) {
 //
 //		try {
-//			email.setFrom("joaoftnunes1@gmail.com", " Restaurante Manager");
+//			email.setFrom("adail101@hotmail.com", " Restaurante Manager");
 //			email.setDebug(true);
 //			email.setSubject(assunto);
 //			email.setHtmlMsg(mensagem);

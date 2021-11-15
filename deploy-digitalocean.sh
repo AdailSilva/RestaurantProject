@@ -1,7 +1,7 @@
 echo "Iniciando deploy do projeto..."
 
 SERVIDOR=$1
-USUARIO="joaoftnunes"
+USUARIO="adailsilva"
 TOMCAT="/opt/tomcat"
 PACOTE="Projeto-*.war"
 WEBAPP="Projeto.war"
@@ -25,3 +25,4 @@ ssh $USUARIO@$SERVIDOR "cp /tmp/$PACOTE $TOMCAT/webapps/$WEBAPP"
 ssh $USUARIO@$SERVIDOR $TOMCAT/bin/startup.sh
 
 echo "... fim."
+

@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 
-	<beans:bean id="appUserDetailsService" class="com.projeto.security.AppUserDetailsService" />
+	<beans:bean id="appUserDetailsService" class="com.adailsilva.security.AppUserDetailsService" />
 
 	<beans:bean id="exceptionTranslationFilter"
 		class="org.springframework.security.web.access.ExceptionTranslationFilter">
@@ -14,18 +14,18 @@
 		<beans:property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
 	</beans:bean>
 
-	<beans:bean id="jsfAccessDeniedHandler" class="com.projeto.security.JsfAccessDeniedHandler">
+	<beans:bean id="jsfAccessDeniedHandler" class="com.adailsilva.security.JsfAccessDeniedHandler">
 		<beans:property name="loginPath" value="/access.xhtml" />
 		<beans:property name="contextRelative" value="true" />
 	</beans:bean>
 
 	<beans:bean id="authenticationEntryPoint"
-		class="com.projeto.security.JsfLoginUrlAuthenticationEntryPoint">
+		class="com.adailsilva.security.JsfLoginUrlAuthenticationEntryPoint">
 		<beans:property name="loginFormUrl" value="/login.xhtml" />
 		<beans:property name="redirectStrategy" ref="jsfRedirectStrategy" />
 	</beans:bean>
 
-	<beans:bean id="jsfRedirectStrategy" class="com.projeto.security.JsfRedirectStrategy" />
+	<beans:bean id="jsfRedirectStrategy" class="com.adailsilva.security.JsfRedirectStrategy" />
 
 	<http pattern="/login.xhtml" security="none" />
 	<http pattern="/register.xhtml" security="none" />

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import com.projeto.model.adapter.ProdutoAdapter;
+import com.adailsilva.model.adapter.ProdutoAdapter;
 
 public class GraficsTest {
 

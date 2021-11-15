@@ -7,7 +7,7 @@
      
 	<application>
 	<el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
-		<message-bundle>com.projeto.Messages</message-bundle>
+		<message-bundle>com.adailsilva.Messages</message-bundle>
 	
 		<locale-config>
 			<default-locale>pt_BR</default-locale>
@@ -18,7 +18,7 @@
 
 	
 	 <factory>
-        <external-context-factory>com.projeto.util.jsf.CDIViewScopeFixExternalContextFactory</external-context-factory>
+        <external-context-factory>com.adailsilva.util.jsf.CDIViewScopeFixExternalContextFactory</external-context-factory>
     </factory>
 
 	<factory>

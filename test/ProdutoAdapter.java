@@ -1,6 +1,6 @@
 import java.util.Date;
 
-import com.projeto.model.Produto;
+import com.adailsilva.model.Produto;
 
 import lombok.Getter;
 import lombok.Setter;

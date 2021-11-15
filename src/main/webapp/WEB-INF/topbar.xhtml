@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pu="http://primefaces.org/ultima">
+	
+	<f:metadata>
+		<f:viewParam name="dummy" />
+		<f:event listener="#{permissoesBean.topBarProcess}" type="preRenderView" />
+	</f:metadata>
+
+	<div class="topbar clearfix">
+		<div class="topbar-left">
+
+			<p:graphicImage name="images/login/manager.png" height="50"
+				width="50" library="ultima-layout" style="margin-left:2px;" />
+
+		</div>
+		<h:form>
+
+<ui:remove>
+			<p:poll interval="3" update="number number2 message  "
+				process="@this" listener="#{permissoesBean.topBarProcess}" />
+</ui:remove>
+			<p:growl showDetail="true" id="message" life="500" />
+			<div class="topbar-right">
+				<a id="menu-button" href="#"> <i></i>
+				</a> <a id="topbar-menu-button" href="#"> <i class="material-icons">menu</i>
+				</a>
+
+				<ul class="topbar-items fadeInDown ">
+					<ui:fragment
+						rendered="#{guestPreferences.profileMode == 'overlay'||guestPreferences.menuLayout == 'menu-layout-static menu-layout-horizontal'}">
+						<li class="profile-item"><a href="#">
+								<div class="profile-image"></div> <span class="topbar-item-name">#{permissoesBean.usuarioSistema.usuario.nome}</span>
+						</a>
+
+							<ul class="ultima-menu animated">
+								<li role="menuitem"><a href="#"> <i
+										class="material-icons">&#xE7FD;</i> <span>Profile</span>
+								</a></li>
+								<li role="menuitem"><a href="#"> <i
+										class="material-icons">&#xE32A;</i> <span>Privacy</span>
+								</a></li>
+								<li role="menuitem"><a href="#"> <i
+										class="material-icons">&#xE8B9;</i> <span>Settings</span>
+								</a></li>
+								<li role="menuitem"><a href="#"> <i
+										class="material-icons">&#xE8AC;</i> <span>Logout</span>
+								</a></li>
+							</ul></li>
+					</ui:fragment>
+
+					<h:panelGroup
+						rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR')}">
+
+						<li><a id="actionRetirada" href="https://www.google2.com.br/">
+								<i class="topbar-icon material-icons">call_made</i> <span
+								class="topbar-badge  rubberBand"><h:outputText
+										id="number" value="#{permissoesBean.numberGarcon}" /></span> <span
+								class="topbar-item-name">Cozinha</span>
+						</a></li>
+						<li><a id="actionCozinha" href="https://www.google.com.br/">
+								<i class="topbar-icon material-icons">restaurant_menu</i> <span
+								class="topbar-badge  rubberBand"><h:outputText
+										id="number2" value="#{permissoesBean.numberCozinha}" /></span> <span
+								class="topbar-item-name">Garçon</span>
+						</a></li>
+
+
+					</h:panelGroup>
+
+				</ul>
+
+
+
+
+
+
+
+			</div>
+
+
+
+		</h:form>
+	</div>
+
+	<script>
+		var cozinha = document.getElementById("actionCozinha");
+		var retirada = document.getElementById("actionRetirada");
+		cozinha.onclick = function action() {
+			window.location = "http://localhost:8080/Projeto/cozinha.xhtml";
+			return false;
+		};
+		retirada.onclick = function action() {
+			window.location = "http://localhost:8080/Projeto/retirada.xhtml";
+			return false;
+		};
+	</script>
+
+</ui:composition>

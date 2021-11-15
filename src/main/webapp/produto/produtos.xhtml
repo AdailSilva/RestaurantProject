@@ -1,0 +1,259 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{produtoBean.carregarCategorias}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+
+			<h:panelGroup id="panelProdutos">
+				<div class="card">
+					<p:messages closable="true" />
+					<h3 class="box-title">Pesquisa de produtos</h3>
+
+
+
+
+					<div class="container-fluid">
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Nome :" for="txtNome" />
+							</div>
+							<div class="col-md-2">
+								<p:inputText id="txtNome" styleClass="larguraMax"
+									value="#{produtoBean.filter.descricao}" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Preço :" for="txtPreco" />
+							</div>
+							<div class="col-md-2">
+								<h:panelGrid columns="3">
+									<p:inputText id="txtPreco" styleClass="larguraMax moeda "
+										style="display:inline;"
+										value="#{produtoBean.filter.precoInicial}">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</p:inputText>
+									<p:outputLabel value=" a "
+										style="margin-left:3px;margin-right:3px;" />
+									<p:inputText id="txtPreco3" styleClass="larguraMax moeda "
+										style="display:inline;"
+										value="#{produtoBean.filter.precoFinal}">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+
+						</div>
+
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Custo :" for="txtCusto" />
+							</div>
+							<div class="col-md-2">
+								<h:panelGrid columns="3">
+									<p:inputText id="txtCusto" styleClass="larguraMax moeda "
+										value="#{produtoBean.filter.custoInicial}">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</p:inputText>
+									<p:outputLabel value=" a "
+										style="margin-left:3px;margin-right:3px;" />
+									<p:inputText id="txtCusto3" styleClass="larguraMax moeda "
+										value="#{produtoBean.filter.custoFinal}">
+										<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+									</p:inputText>
+								</h:panelGrid>
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Categoria :" id="categoria" />
+							</div>
+							<div class="col-md-2">
+								<p:selectOneMenu styleClass="form-control larguraMax"
+									value="#{produtoBean.filter.categoria}">
+									<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+									<f:selectItems value="#{produtoBean.categorias}" var="e"
+										itemValue="#{e}" itemLabel="#{e.descricao}" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+					</div>
+
+
+
+					<br />
+					<p:commandButton value="Pesquisar" update="panelProdutos"
+						process="panelProdutos" styleClass="green-btn"
+						action="#{produtoBean.pesquisar}" />
+
+					<br /> <br />
+
+					<p:dataTable emptyMessage="Nenhum produto encontrado." var="p"
+						rowIndexVar="rowIndex"
+						rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+						id="produtos" reflow="true" paginator="true" rows="10"
+						value="#{produtoBean.produtosFiltrados}">
+						<p:column headerText="Nome">
+							<p:outputLabel value="#{p.descricao}" />
+						</p:column>
+						<p:column headerText="Preço">
+							<p:outputLabel value="#{p.preco}" />
+						</p:column>
+						<p:column headerText="Custo">
+							<p:outputLabel value="#{p.custo}" />
+						</p:column>
+						<p:column headerText="Categoria">
+							<p:outputLabel value="#{p.categoria.descricao}" />
+						</p:column>
+
+						<p:column headerText="Operacional">
+							<p:commandButton styleClass="teal-btn" icon="ui-icon-edit"
+								process="@this" update="@form"
+								oncomplete="PF('DialogEdicao').show()">
+								<f:setPropertyActionListener value="#{p}"
+									target="#{produtoBean.produtoSelecionado}" />
+							</p:commandButton>
+							<p:commandButton icon="ui-icon-remove-circle"
+								styleClass="red-btn" style="margin-top:2px;" process="@this"
+								update="@form" oncomplete="PF('DialogConfirmacao').show()">
+								<f:setPropertyActionListener value="#{p}"
+									target="#{produtoBean.produtoSelecionado}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</h:panelGroup>
+
+			<p:dialog widgetVar="DialogConfirmacao" closable="true"
+				header="Deseja excluir  #{produtoBean.produtoSelecionado.descricao}   ? "
+				resizable="true" style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel">
+					<p:messages id="msgDialog" autoUpdate="false" />
+
+					<h:panelGroup>
+						<p:commandButton value="Sim"
+							oncomplete="if (!args.validationFailed) PF('DialogConfirmacao').hide()"
+							process="itemPanel produtos msgDialog" styleClass="larguraMax"
+							action="#{produtoBean.remover}" update="@form" />
+						<p:commandButton value="Não" style="margin-top:3px;"
+							oncomplete="PF('DialogConfirmacao').hide()"
+							process="itemPanel produtos msgDialog" styleClass="larguraMax"
+							update="itemPanel msgDialog" />
+					</h:panelGroup>
+
+
+				</h:panelGroup>
+
+
+			</p:dialog>
+
+
+			<p:dialog widgetVar="DialogEdicao" closable="true"
+				header="Edição :  #{produtoBean.produtoSelecionado.descricao}    "
+				resizable="true" style="min-width: 50%" responsive="true">
+				<h:panelGroup id="itemPanel2">
+					<p:messages id="msgDialog2" autoUpdate="false" />
+
+					<h:panelGroup id="panelEdicao">
+
+						<div class="container-fluid">
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Nome :" for="txtNome2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtNome2" styleClass="larguraMax"
+										value="#{produtoBean.produtoSelecionado.descricao}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Preço :" for="txtPreco2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtPreco2" styleClass="larguraMax"
+										value="#{produtoBean.produtoSelecionado.preco}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Custo :" for="txtCusto2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtCusto2" styleClass="larguraMax"
+										value="#{produtoBean.produtoSelecionado.custo}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Categoria :" />
+								</div>
+								<div class="col-md-8">
+									<p:selectOneMenu required="true"
+										styleClass="form-control larguraMax"
+										value="#{produtoBean.produtoSelecionado.categoria}"
+										requiredMessage="Categoria : precisa ser preenchido">
+										<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+										<f:selectItems value="#{produtoBean.categorias}" var="e"
+											itemValue="#{e}" itemLabel="#{e.descricao}" />
+									</p:selectOneMenu>
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-6">
+									<p:commandButton value="Editar" icon="ui-icon-check"
+										oncomplete="if (!args.validationFailed) PF('DialogEdicao').hide()"
+										process="panelEdicao produtos msgDialog2"
+										styleClass="larguraMax" action="#{produtoBean.editar}"
+										update="panelEdicao produtos msgDialog2" />
+								</div>
+								<div class="col-md-6">
+									<p:commandButton value="Cancelar" style="margin-top:3px"
+										icon="ui-icon-remove" oncomplete="PF('DialogEdicao').hide()"
+										process="itemPanel2 produtos msgDialog2"
+										styleClass="larguraMax" update="itemPanel msgDialog" />
+								</div>
+							</div>
+
+						</div>
+
+
+
+
+
+
+
+					</h:panelGroup>
+
+
+				</h:panelGroup>
+
+
+			</p:dialog>
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

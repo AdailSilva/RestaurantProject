@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>PrimeFaces Ultima</title>
+	<h:outputScript name="js/ripple.js" library="ultima-layout" />
+	<h:outputScript name="js/layout.js" library="ultima-layout" />
+
+
+
+</h:head>
+
+<h:body styleClass="login-body"
+	style="background-color: #252C30 !important;">
+	<h:form id="frm" prependId="false">
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{loginBean.preRender}" type="preRenderView" />
+		</f:metadata>
+		<p:messages />
+		<div class="card login-panel ui-fluid">
+
+			<div class="ui-g">
+
+
+				<div class="ui-g-12">
+					<h2 style="text-align: center;">Registre-se</h2>
+				</div>
+				
+
+
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText id="nome" required="true"
+							value="#{clienteBean.cliente.nome}" />
+						<label>Nome</label>
+					</h:panelGroup>
+				</div>
+
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText id="sobrenome"
+							value="#{clienteBean.cliente.sobrenome}" required="true" />
+						<label>Sobrenome</label>
+					</h:panelGroup>
+				</div>
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputMask id="cpf" value="#{clienteBean.cliente.cpf}"
+							mask="999.999.999-99" />
+						<p:outputLabel for="cpf" value="Cpf" />
+					</h:panelGroup>
+				</div>
+
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputMask id="dtNascimento" styleClass="larguraMax"
+							value="#{clienteBean.cliente.nascimento}" mask="99/99/9999"
+							required="true"
+							requiredMessage="Aniversário : precisa ser preenchido.">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:inputMask>
+						<label>Data nascimento</label>
+					</h:panelGroup>
+				</div>
+
+
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputMask id="txtTelefone" styleClass="larguraMax"
+							value="#{clienteBean.cliente.telefone}" mask="(99) 9 9999-9999"
+							required="true" />
+						<label>Telefone</label>
+					</h:panelGroup>
+				</div>
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText id="email" value="#{clienteBean.cliente.email}"
+							requiredMessage="email : precisa ser preenchido." required="true" />
+						<label>Email</label>
+					</h:panelGroup>
+				</div>
+
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:inputText id="user" value="#{clienteBean.cliente.usuario}"
+							required="true" />
+						<label>Usuário</label>
+					</h:panelGroup>
+				</div>
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:password id="senha" value="#{clienteBean.cliente.senha}"
+							required="true" />
+						<label>Senha</label>
+					</h:panelGroup>
+				</div>
+
+				<div class="ui-g-12">
+					<h:panelGroup styleClass="md-inputfield">
+						<p:password id="confirmSenha" required="true" />
+						<label>Confirmação senha</label>
+					</h:panelGroup>
+				</div>
+
+				<div class="ui-g-12">
+					<p:commandButton value="Registrar" icon="ui-icon-person"
+						process="@form" update="@form" action="#{clienteBean.salvar}" />
+					<p:button outcome="/login" value="Voltar" icon="ui-icon-help"
+						styleClass="amber-btn" />
+				</div>
+			</div>
+		</div>
+
+
+
+		<h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+		<h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css"
+			library="ultima-layout" />
+	</h:form>
+</h:body>
+
+</html>

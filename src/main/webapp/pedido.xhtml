@@ -1,0 +1,522 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{pedidoBean.preRender}" type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<p:messages showDetail="false" id="messages" closable="true" />
+
+
+
+			<div class="card">
+
+				<h3>Pedido</h3>
+
+
+
+				<div class="card">
+
+
+
+					<p:steps activeIndex="#{pedidoBean.step}" readonly="false"
+						style="width: 100%;">
+						<p:menuitem value="Mesa/Delivey" />
+						<p:menuitem value="Pedido" />
+						<p:menuitem value="Pagamento" />
+						<p:menuitem value="Conclusão" />
+					</p:steps>
+					<br /> <br />
+
+
+
+
+					<h:panelGroup id="panelPedido" rendered="#{pedidoBean.step == 0}">
+
+						<div class="row" style="margin-bottom: 5px;">
+							<div class="col-md-12">
+								<h3 style="text-align: center;">Mesa</h3>
+
+							</div>
+							<div class="col-md-12">
+								<p:selectOneMenu styleClass="larguraMax"
+									value="#{pedidoBean.mesaSelecionada}" id="menuMesa"
+									style="width:100%;">
+									<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+
+
+									<f:selectItems value="#{pedidoBean.mesas}" var="m"
+										itemLabel="Mesa #{m.relacionamento == null ? m.numeroMesa : m.relacionamento.numeroMesas  }"
+										itemValue="#{m}" />
+									<p:ajax event="change" update="@form  "
+										process="@this menuMesa"
+										listener="#{pedidoBean.selecionarMesa}" />
+								</p:selectOneMenu>
+
+
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+							<div class="col-md-12">
+								<h3 style="text-align: center;">Delivery</h3>
+
+							</div>
+							<div class="col-md-12">
+								<p:selectOneMenu styleClass="larguraMax" id="menuDeliveryMenu"
+									value="#{pedidoBean.pedidoSelecionado}" style="width:100%;">
+									<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+
+
+									<f:selectItems value="#{pedidoBean.pedidoDelivery}" var="m"
+										itemLabel="Cliente  #{m.cliente.nome}" itemValue="#{m}" />
+									<p:ajax event="change" update="@form  "
+										process="@this menuMesa"
+										listener="#{pedidoBean.selecionarPedidoDelivery}" />
+
+								</p:selectOneMenu>
+
+
+							</div>
+						</div>
+
+					</h:panelGroup>
+
+					<h:panelGroup id="panelConfirmacao"
+						rendered="#{pedidoBean.step == 1}">
+
+						<h:panelGroup rendered="#{pedidoBean.pedido.mesa !=null}">
+
+							<h3 style="text-align: center;">
+								Mesa <strong>#{pedidoBean.pedido.mesa.relacionamento ==
+									null ? pedidoBean.pedido.mesa.numeroMesa :
+									pedidoBean.pedido.mesa.relacionamento.numeroMesas }</strong>
+							</h3>
+						</h:panelGroup>
+						<p:dataTable value="#{pedidoBean.pedido.produtos}" var="ip"
+							rowIndexVar="rowIndex"
+							rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+							paginator="true" rows="10" reflow="true">
+
+							<p:column headerText="Produto">
+								<h:outputText value="#{ip.produto.descricao} "
+									style="font-size:1.2em;" />
+							</p:column>
+							<p:column headerText="Quantidade">
+								<h:outputText value="#{ip.quantidade} " style="font-size:1.2em;" />
+							</p:column>
+							<p:column headerText="Valor unitário">
+								<h:outputText value="R$ #{ip.produto.preco} "
+									style="font-size:1.2em;">
+									<f:convertNumber type="currency" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Total">
+								<h:outputText value="R$ #{ip.valorTotal} "
+									style="font-size:1.2em;">
+									<f:convertNumber type="currency" />
+								</h:outputText>
+							</p:column>
+
+						</p:dataTable>
+						<div class="clearfix">
+							<h2 style="display: inline; float: right;">
+								Subtotal : R$ <strong>#{pedidoBean.pedido.valorTotal}</strong>
+							</h2>
+						</div>
+
+
+						<div class="row">
+
+							<h:panelGroup class="col-md-6"
+								rendered="#{pedidoBean.pedido.delivery == false}">
+
+								<h:panelGroup id="panelCliente1"
+									rendered="#{pedidoBean.pedido.mesa !=null}">
+									<h3>Deseja identificar o cliente?</h3>
+
+									<h:panelGroup styleClass="md-inputfield"
+										style="margin-top:10px;">
+										<p:inputText id="nome" styleClass="larguraMax"
+											value="#{pedidoBean.clienteFilter.nome}" />
+										<p:outputLabel for="nome" value="Nome" />
+									</h:panelGroup>
+									<br />
+									<h:panelGroup styleClass="md-inputfield"
+										style="margin-top:10px;">
+										<p:inputText id="user" styleClass="larguraMax"
+											value="#{pedidoBean.clienteFilter.usuario}" />
+										<p:outputLabel for="user" value="Usuário" />
+									</h:panelGroup>
+									<br />
+									<h:panelGroup styleClass="md-inputfield"
+										style="margin-top:10px;">
+										<p:inputText id="cpf" styleClass="larguraMax"
+											value="#{pedidoBean.clienteFilter.cpf}" />
+										<p:outputLabel for="cpf" value="Cpf" />
+									</h:panelGroup>
+
+									<br />
+									<p:commandButton value="Buscar" styleClass="larguraMax"
+										action="#{pedidoBean.buscarClientes}"
+										process=":frm:panelCliente1 :frm:panelCliente2"
+										update=":frm:panelCliente1 :frm:panelCliente2" />
+									<br />
+									<br />
+								</h:panelGroup>
+							</h:panelGroup>
+							<h:panelGroup class="col-md-6">
+
+								<h:panelGroup id="panelObservacao2">
+									<h3>Deseja escrever observações?</h3>
+									<p:inputTextarea style="width:100%;background-color:#B0C4DE;"
+										value="#{pedidoBean.pedido.observacaoFuncionario}"
+										autoResize="true" rows="4" />
+								</h:panelGroup>
+
+							</h:panelGroup>
+
+							<h:panelGroup class="col-md-6"
+								rendered="#{pedidoBean.pedido.delivery}">
+
+								<h:panelGroup id="panelObservacao">
+									<h3>Observação do cliente</h3>
+									<p:outputLabel style="width:100%;"
+										value="#{pedidoBean.pedido.observacaoCliente}" />
+								</h:panelGroup>
+
+							</h:panelGroup>
+						</div>
+
+
+
+
+						<h:panelGroup id="panelCliente2"
+							rendered="#{pedidoBean.pedido.delivery == false}">
+							<p:dataTable var="c" paginator="true" rows="10" reflow="true"
+								rowIndexVar="rowIndex"
+								rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+								emptyMessage="Nenhum cliente encontrado"
+								value="#{pedidoBean.clientes}">
+
+								<p:column headerText="Nome">
+									<h:outputText value="#{c.nome} " style="font-size:1.2em;" />
+								</p:column>
+								<p:column headerText="Cpf">
+									<h:outputText value="#{c.cpf} " style="font-size:1.2em;" />
+								</p:column>
+								<p:column headerText="Usuario">
+									<h:outputText value="#{c.usuario} " style="font-size:1.2em;" />
+								</p:column>
+								<p:column headerText="Operacional">
+									<p:commandButton value="Selecionar" styleClass="larguraMax"
+										process="@this" update=":frm:panelCliente1 :frm:panelCliente2"
+										action="#{pedidoBean.selecionarCliente}">
+										<f:setPropertyActionListener value="#{c}"
+											target="#{pedidoBean.clienteSeleciondo}" />
+									</p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+							<h:panelGroup rendered="#{pedidoBean.clienteSeleciondo != null}">
+								<h4>
+									Cliente selecionado : <strong>
+										#{pedidoBean.clienteSeleciondo.nome}</strong>
+								</h4>
+							</h:panelGroup>
+
+
+						</h:panelGroup>
+
+
+						<div class="clearfix" style="margin-top: 30px;">
+							<p:commandButton value="Voltar" style="width:40%;float:left;"
+								icon="ui-icon-undo" styleClass="amber-btn" process="@this"
+								update="@form" action="#{pedidoBean.pedidoToMesa}" />
+							<p:commandButton value="Próximo" style="width:40%;float:right;"
+								icon="ui-icon-trending-flat" styleClass="amber-btn"
+								action="#{pedidoBean.pedidoToPagamento}"
+								process="@this panelObservacao" update="@form" />
+
+						</div>
+					</h:panelGroup>
+
+
+
+					<h:panelGroup id="panelPagamento"
+						rendered="#{pedidoBean.step == 2}">
+
+						<div class="container">
+
+							<h3>Pagamento</h3>
+							<h4>
+								Valor à pagar <strong>#{pedidoBean.pedido.valorTotal}</strong>
+								reais
+							</h4>
+
+							<div class="row">
+								<div class="col-md-3">
+									<p:outputLabel value="Qual forma de pagamento ?" />
+								</div>
+								<div class="col-md-3">
+									<p:selectOneRadio value="#{pedidoBean.tipoPagamento}"
+										required="true"
+										requiredMessage="É necessário escolher uma forma de pagamento.">
+										<f:selectItem itemLabel="Dinheiro" itemValue="1" />
+										<f:selectItem itemLabel="Cartão" itemValue="2" />
+										<p:ajax event="click" update="panelPagamento" process="@this" />
+									</p:selectOneRadio>
+								</div>
+							</div>
+							<br />
+
+
+							<h:panelGroup id="panelCartao"
+								rendered="#{pedidoBean.tipoPagamento==2}">
+
+								<div class="row">
+									<div class="col-md-3">
+										<p:outputLabel value="Bandeira : " />
+									</div>
+									<div class="col-md-4">
+										<!--  -->
+										<p:selectOneMenu value="#{pedidoBean.retornoCartao}"
+											styleClass="form-control" required="true"
+											requiredMessage="É necessário selecionar um cartão.">
+											<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+											<f:selectItems value="#{pedidoBean.cartoes}" var="c"
+												itemLabel="#{c.bandeira}" itemValue="#{c.id}" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-md-3">
+										<p:outputLabel value="Código da operação :" />
+									</div>
+									<div class="col-md-4">
+										<p:inputText styleClass="larguraMax" required="true"
+											requiredMessage="Codigo da operação é necessário."
+											value="#{pedidoBean.formaPagamento.codOperacao}" />
+									</div>
+								</div>
+								<br />
+
+								<div class="row">
+									<div class="col-md-3">
+										<p:outputLabel value="Valor :" />
+									</div>
+									<div class="col-md-4">
+										<p:inputText styleClass="larguraMax moeda "
+											value="#{pedidoBean.formaPagamento.valor}" required="true"
+											requiredMessage="O valor é necessário">
+
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+										</p:inputText>
+									</div>
+								</div>
+								<br />
+								<div class="row">
+									<div class="col-md-3"></div>
+									<div class="col-md-4">
+										<h:graphicImage value="resources\img\credit\cirrus.png" />
+										<h:graphicImage
+											value="resources\img\credit\american-express.png" />
+										<h:graphicImage value="resources\img\credit\mastercard.png" />
+										<h:graphicImage value="resources\img\credit\mestro.png" />
+										<h:graphicImage value="resources\img\credit\paypal2.png" />
+										<h:graphicImage value="resources\img\credit\visa.png" />
+									</div>
+								</div>
+
+
+							</h:panelGroup>
+
+							<h:panelGroup id="panelDinheiro"
+								rendered="#{pedidoBean.tipoPagamento==1}">
+								<div class="row">
+									<div class="col-md-3">
+										<p:outputLabel value="Dinheiro recebido :" />
+									</div>
+									<div class="col-md-4">
+										<p:inputText styleClass=" moeda larguraMax"
+											value="#{pedidoBean.formaPagamento.valor}" required="true"
+											requiredMessage="O valor é necessário">
+											<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+										</p:inputText>
+
+									</div>
+								</div>
+
+
+
+
+
+							</h:panelGroup>
+							<h:panelGroup rendered="#{pedidoBean.faltaDinheiro}">
+								<h:panelGroup id="valorPendente">
+
+									<h3>
+										Falta <strong> #{pedidoBean.diferencaValor}</strong> reais
+									</h3>
+								</h:panelGroup>
+								<p:dataTable value="#{pedidoBean.pagamento.pagamento}" var="pg"
+									rowIndexVar="rowIndex"
+									rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+									paginator="true" rows="10" id="tabelaPagamentos" reflow="true">
+									<p:column headerText="Forma pagamento">
+										<h:outputText value="Cartão : #{pg.cartao.bandeira}"
+											rendered="#{pg.cartao!=null}" />
+										<h:outputText value="Dinheiro" rendered="#{pg.cartao==null}" />
+									</p:column>
+
+									<p:column headerText="Cod. Operação">
+										<h:outputText value="#{pg.codOperacao}"
+											rendered="#{pg.cartao!=null}" />
+										<h:outputText value="n/a" rendered="#{pg.cartao==null}" />
+									</p:column>
+
+									<p:column headerText="Valor">
+										<h:outputText value="R$ #{pg.valor}">
+											<f:convertNumber type="currency" />
+										</h:outputText>
+									</p:column>
+
+									<p:column headerText="Utilidade">
+										<p:commandButton value="Remover"
+											styleClass="red-btn larguraMax" process="@this"
+											update="tabelaPagamentos :frm:valorPendente"
+											action="#{pedidoBean.removerFormaPagamento}">
+											<f:setPropertyActionListener value="#{pg}"
+												target="#{pedidoBean.formaPagamentoSelecionado}" />
+										</p:commandButton>
+									</p:column>
+
+								</p:dataTable>
+
+							</h:panelGroup>
+						</div>
+						<div class="clearfix" style="margin-top: 30px;">
+							<p:commandButton value="Voltar" style="width:40%;float:left;"
+								process="@this" update="@form"
+								action="#{pedidoBean.pagamentoToPedido}" icon="ui-icon-undo"
+								styleClass="amber-btn" />
+							<p:commandButton value="Próximo" style="width:40%;float:right;"
+								process="@form" update="@form" id="btnPagamentoToConclusao"
+								action="#{pedidoBean.pagamentoToConclusao}"
+								icon="ui-icon-trending-flat" styleClass="amber-btn" />
+
+						</div>
+
+
+
+					</h:panelGroup>
+
+					<h:panelGroup id="panelConclusao"
+						rendered="#{pedidoBean.step == 3}">
+
+						<div class="container">
+							<h3>Pedido Registrado com sucesso!</h3>
+							<h:panelGroup rendered="#{pedidoBean.troco>0}">
+
+								<div class="row">
+									<div class="col-sm-2">
+
+										<h4>Troco :</h4>
+
+									</div>
+									<div class="col-sm-2">
+										<h4>R$ #{pedidoBean.troco}</h4>
+									</div>
+								</div>
+
+							</h:panelGroup>
+							<div class="row">
+								<h:outputLink value="#{pedidoBean.pedido}"></h:outputLink>
+								<div class="col-sm-2">
+									<strong> <p:outputLabel value="Código :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{pedidoBean.pedido.id}" />
+
+								</div>
+							</div>
+
+
+							<div class="row">
+								<div class="col-sm-2">
+									<strong> <p:outputLabel value="Funcionário :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{pedidoBean.pedido.funcionario.nome}" />
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-2">
+									<strong> <p:outputLabel value="Cliente :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{pedidoBean.pedido.cliente.nome}"
+										rendered="#{pedidoBean.pedido.cliente != null}" />
+									<p:outputLabel value="Não informado"
+										rendered="#{pedidoBean.pedido.cliente == null}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-2">
+									<strong> <p:outputLabel value="Data :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{pedidoBean.pedido.dataFormatada}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-2">
+									<strong> <p:outputLabel value="Valor total :" />
+									</strong>
+
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="R$ #{pedidoBean.pedido.valorTotal}" />
+
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:button outcome="/dashboard" value="Ir para página inicial"
+										styleClass="secondary" />
+								</div>
+							</div>
+						</div>
+
+					</h:panelGroup>
+
+
+				</div>
+			</div>
+			<p:blockUI block="@form" trigger="btnPagamentoToConclusao"
+				id="blockUI">
+        Carregando<br />
+				<h:graphicImage value="resources\img\progress.gif" width="170"
+					height="150" />
+
+			</p:blockUI>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

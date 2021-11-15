@@ -1,0 +1,188 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{produtoBean.carregarCategorias}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<div class="card">
+				<p:messages closable="true" />
+
+
+
+				<h:panelGroup id="panelCategorias">
+
+
+
+
+					<h3>Pesquisa de categorias</h3>
+
+
+					<div class="container-fluid">
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Descrição :" for="txtDescrição" />
+							</div>
+							<div class="col-md-2">
+								<p:inputText id="txtDescrição"
+									value="#{categoriaBean.filter.descricao}"
+									styleClass="larguraMax" />
+							</div>
+						</div>
+
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Tipo :" id="categoria" />
+							</div>
+							<div class="col-md-2">
+								<p:selectOneMenu id="menuTipo" styleClass="larguraMax"
+									value="#{categoriaBean.filter.tipo}">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItem itemLabel="Bebida" itemValue="Bebida" />
+									<f:selectItem itemLabel="Refeição" itemValue="Refeicão" />
+									<f:selectItem itemLabel="Sobremesa" itemValue="Sobremesa" />
+
+								</p:selectOneMenu>
+
+							</div>
+						</div>
+
+
+
+
+					</div>
+
+
+
+
+					<p:commandButton value="Pesquisar" styleClass="green-btn"
+						action="#{categoriaBean.pesquisar()}"
+						process="panelCategorias categorias "
+						update="panelCategorias categorias " />
+
+
+
+				</h:panelGroup>
+				<br /> <br />
+				<p:dataTable paginator="true" rows="10" rowIndexVar="rowIndex"
+					value="#{categoriaBean.filtrados}" var="c" id="categorias"
+					rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}">
+					<p:column headerText="Descrição">
+						<p:outputLabel value="#{c.descricao}" />
+					</p:column>
+
+					<p:column headerText="Tipo">
+						<p:outputLabel value="#{c.tipo}" />
+					</p:column>
+
+					<p:column headerText="Operacional">
+						<p:commandButton styleClass="teal-btn" icon="ui-icon-edit"
+							process="@this" update="@form"
+							oncomplete="PF('DialogEdicao').show()">
+							<f:setPropertyActionListener value="#{c}"
+								target="#{categoriaBean.categoriaSelecionada}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-remove-circle" styleClass="red-btn"
+							style="margin-top:2px;" process="@this" update="@form"
+							oncomplete="PF('DialogConfirmacao').show()">
+							<f:setPropertyActionListener value="#{c}"
+								target="#{categoriaBean.categoriaSelecionada}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</div>
+
+			<p:dialog widgetVar="DialogConfirmacao" closable="true"
+				header="Deseja excluir  #{categoriaBean.categoriaSelecionada.descricao}   ? "
+				resizable="true" style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel2">
+					<p:messages id="msgDialog2" autoUpdate="false" />
+
+					<h:panelGroup>
+						<p:commandButton value="Sim"
+							oncomplete="if (!args.validationFailed) PF('DialogConfirmacao').hide()"
+							process="itemPanel2 categorias  msgDialog2"
+							styleClass="larguraMax" action="#{categoriaBean.remover}"
+							update="@form" />
+						<p:commandButton value="Não" style="margin-top:3px;"
+							oncomplete="PF('DialogConfirmacao').hide()"
+							process="itemPanel2  msgDialog2" styleClass="larguraMax"
+							update="itemPanel2 msgDialog2" />
+					</h:panelGroup>
+
+
+				</h:panelGroup>
+			</p:dialog>
+
+			<p:dialog widgetVar="DialogEdicao" closable="true"
+				header=" Edição   " resizable="true" style="min-width: 600px"
+				responsive="true">
+				<h:panelGroup id="itemPanel">
+					<p:messages id="msgDialog" autoUpdate="false" />
+
+					<div class="container-fluid">
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Nome :" for="txtNome" />
+							</div>
+							<div class="col-md-4">
+								<p:inputText id="txtNome" styleClass="larguraMax"
+									value="#{categoriaBean.categoriaSelecionada.descricao}" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Tipo  :" />
+							</div>
+							<div class="col-md-4">
+								<p:selectOneMenu styleClass="larguraMax" required="true"
+									value="#{categoriaBean.categoriaSelecionada.tipo}"
+									requiredMessage="Tipo: precisa ser preenchido !">
+									<f:selectItem itemLabel="Bebida" itemValue="Bebida" />
+									<f:selectItem itemLabel="Refeição" itemValue="Refeicão" />
+									<f:selectItem itemLabel="Sobremesa" itemValue="Sobremesa" />
+									<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="col-md-6">
+								<p:commandButton value="Não" style="margin-top:3px;"
+									oncomplete="PF('DialogConfirmacao').hide()"
+									process="itemPanel  msgDialog" styleClass="larguraMax red-btn"
+									update="itemPanel msgDialog" />
+							</div>
+							<div class="col-md-6">
+								<p:commandButton value="Sim"
+									oncomplete="if (!args.validationFailed) PF('DialogConfirmacao').hide()"
+									process="itemPanel categorias  msgDialog"
+									styleClass="larguraMax green-btn"
+									action="#{categoriaBean.editar()}" update="@form" />
+							</div>
+
+
+
+
+						</div>
+					</div>
+				</h:panelGroup>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

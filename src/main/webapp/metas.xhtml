@@ -1,0 +1,149 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+
+	<ui:define name="content">
+		<h:form id="frm">
+			<div class="card">
+				<div class="container-fluid">
+					<h3>Metas</h3>
+
+					<p:toolbar>
+						<f:facet name="left">
+							<p:commandButton value="Nova" icon="ui-icon-document"
+								action="#{metasBean.nova()}" update="frm" process="@this" />
+
+							<p:commandButton action="#{metasBean.listar()}" update="frm"
+								immediate="true" process="@form" value="Todas"
+								icon="ui-icon-list" />
+
+
+						</f:facet>
+
+
+
+					</p:toolbar>
+
+					<br />
+
+					<p:messages id="message" closable="true" />
+					<br />
+					<h:panelGroup id="nova"
+						rendered="#{metasBean.chooseOption == true}">
+
+						<h4>Criação de meta</h4>
+
+						<div class="row">
+							<div class="col-md-2">
+								<p:outputLabel value="Data  : " />
+							</div>
+							<div class="col-md-2">
+
+								<h:panelGrid columns="3">
+									<p:inputMask mask="99/99/9999" styleClass="larguraMax"
+										value="#{metasBean.meta.dataInicial}">
+										<f:convertDateTime pattern="dd/MM/yyyy"
+											timeZone="America/Fortaleza" />
+									</p:inputMask>
+									<p:outputLabel value=" até "
+										style="margin-left:3px;margin-right:3px;" />
+									<p:inputMask mask="99/99/9999" styleClass="larguraMax"
+										value="#{metasBean.meta.dataFinal}">
+										<f:convertDateTime pattern="dd/MM/yyyy"
+											timeZone="America/Fortaleza" />
+									</p:inputMask>
+								</h:panelGrid>
+							</div>
+
+						</div>
+
+						<div class="row">
+							<div class="col-md-2">
+								<p:outputLabel value="Valor total  : " />
+							</div>
+							<div class="col-md-2">
+								<p:inputText styleClass="larguraMax moeda"
+									value="#{metasBean.meta.valorTotal}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</p:inputText>
+							</div>
+
+						</div>
+
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Funcionário :" />
+							</div>
+							<div class="col-md-2">
+								<p:selectOneMenu styleClass="larguraMax" filter="true"
+									value="#{metasBean.funcionarioSelecionado}">
+									<f:selectItems itemLabel="#{c.nome} #{c.sobrenome} "
+										itemValue="#{c}" value="#{metasBean.funcionarios}" var="c" />
+									<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:commandButton value="Cadastrar" process="nova"
+									update="nova message" action="#{metasBean.salvar}"
+									styleClass="larguraMax green-btn" />
+							</div>
+						</div>
+
+					</h:panelGroup>
+					<h:panelGroup id="todas"
+						rendered="#{metasBean.chooseOption == false}">
+						<h4>Lista</h4>
+
+						<p:dataTable value="#{metasBean.metas}" var="m" reflow="true">
+							<p:column headerText="Data inicial">
+								<p:outputLabel value="#{m.dataInicial}">
+									<f:convertDateTime pattern="dd/MM/yyyy "
+										timeZone="America/Fortaleza" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Data final">
+								<p:outputLabel value="#{m.dataFinal}">
+									<f:convertDateTime pattern="dd/MM/yyyy "
+										timeZone="America/Fortaleza" />
+								</p:outputLabel>
+							</p:column>
+							<p:column headerText="Valor total">
+								<p:outputLabel value="R$ #{m.valorTotal}" />
+							</p:column>
+							<p:column headerText="Funcionário">
+								<p:outputLabel
+									value="#{m.funcionario == null ? 'N/A' : m.funcionario.nome }" />
+							</p:column>
+							<p:column headerText="Progresso">
+								<p:progressBar value="#{m.porcentagem}" labelTemplate="{value}%"
+									styleClass="larguraMax" displayOnly="true" />
+							</p:column>
+
+							<p:column headerText="Status">
+								<p:commandButton styleClass="green-btn larguraMax"
+									value="Finalizado" rendered="#{m.status == 'FINALIZADO'}" />
+								<p:commandButton styleClass="amber-btn larguraMax"
+									value="Andamento" rendered="#{m.status == 'ANDAMENTO'}" />
+							</p:column>
+
+						</p:dataTable>
+
+
+					</h:panelGroup>
+
+
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

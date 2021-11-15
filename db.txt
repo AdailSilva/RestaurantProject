@@ -1,0 +1,28 @@
+INSERT INTO endereco (bairro,cep,complemento,descricao,numero,rua) VALUES ('Adail Silva','62320230','Campo do Laurão','My House','505','RUA PROFESSOR OSVALDO NOGUEIRA LIMA');
+INSERT INTO restaurante (cnpj,id_endereco) VALUES ('12345',1);
+INSERT INTO pessoa (nascimento,cpf,nome,sobrenome,telefone,usuario,senha,id_restaurante) VALUES (now(),'01115937359','Adail','Silva','88994129256','admin','123',1);
+INSERT INTO pessoa (nascimento,cpf,nome,sobrenome,telefone,usuario,senha,id_restaurante) VALUES (now(),'01115937359','Ágatha','Silva','88994129256','func','123',1);
+INSERT INTO pessoa (nascimento,cpf,nome,sobrenome,telefone,usuario,senha,id_restaurante) VALUES (now(),'01115937359','David Miguel','Silva','88994129256','cliente','123',1);
+INSERT INTO acesso(descricao) VALUES ('ADMINISTRADORES');
+INSERT INTO acesso(descricao) VALUES ('VENDEDOR');
+INSERT INTO acesso(descricao) VALUES ('CLIENTE');
+INSERT INTO funcionario (admissao,idPessoa) VALUES (now(),1);
+INSERT INTO funcionario (admissao,idPessoa) VALUES (now(),2);
+INSERT INTO acesso_pessoa(funcionario_id,acesso_id) VALUES (1,1);
+INSERT INTO acesso_pessoa(funcionario_id,acesso_id) VALUES (2,2);
+INSERT INTO acesso_pessoa(funcionario_id,acesso_id) VALUES (3,3);
+INSERT INTO categoria (descricao,tipo) VALUES ('Refrigerante','Bebida') ;
+INSERT INTO produto (custo,descricao,preco,urlImagem,id_categoria) VALUES (5,'Coca-cola',3,'url img',1) ;
+INSERT INTO produto (custo,descricao,preco,urlImagem,id_categoria) VALUES (5,'Fanta',3,'url img',1) ;
+INSERT INTO produto (custo,descricao,preco,urlImagem,id_categoria) VALUES (5,'Guaraná',3,'url img',1) ;
+INSERT INTO produto (custo,descricao,preco,urlImagem,id_categoria) VALUES (5,'Jesus',3,'url img',1) ;
+INSERT INTO mesa (numero,qtdCadeiras,status,id_restaurante) VALUES ('001',4,'LIVRE',1) ;
+INSERT INTO mesa (numero,qtdCadeiras,status,id_restaurante) VALUES ('002',4,'LIVRE',1) ;
+INSERT INTO mesa (numero,qtdCadeiras,status,id_restaurante) VALUES ('003',4,'LIVRE',1) ;
+INSERT INTO mesa (numero,qtdCadeiras,status,id_restaurante) VALUES ('004',4,'LIVRE',1) ;
+INSERT INTO mesa (numero,qtdCadeiras,status,id_restaurante) VALUES ('005',4,'LIVRE',1) ;
+INSERT INTO mesa (numero,qtdCadeiras,status,id_restaurante) VALUES ('006',4,'LIVRE',1) ;
+INSERT INTO cartao(bandeira) VALUES ('Banese');
+INSERT INTO cartao(bandeira) VALUES ('Visa');
+INSERT INTO cartao(bandeira) VALUES ('Master');
+

@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+	<ui:define name="content" style="padding-right:0;">
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{cozinhaBean.preRenderCozinha}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<p:poll interval="3" update="table"
+				process="@this" listener="#{cozinhaBean.refreshCozinha}" />
+
+			<h2 style="text-align: center;">Demandas Cozinha</h2>
+
+			<div class="card">
+
+
+
+				<div class="card">
+
+					<p:dataTable value="#{cozinhaBean.itensCozinha}" var="ip"
+						rowIndexVar="rowIndex" id="table"
+						rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+						paginator="true" rows="10" reflow="true"
+						emptyMessage="Nenhuma entrega pendente">
+
+						<p:column headerText="Descrição">
+							<h:outputText value="#{ip.produto.descricao}"
+								style="font-size:1.4em;" />
+						</p:column>
+						<p:column headerText="Quantidade">
+							<h:outputText value="#{ip.quantidade} unid."
+								style="font-size:1.2em;" />
+						</p:column>
+
+						<p:column headerText="Mesa">
+							<h:outputText
+								value="Mesa #{ip.pedido.mesa.relacionamento == null ? ip.pedido.mesa.numeroMesa : ip.pedido.mesa.relacionamento.numeroMesas  }"
+								style="font-size:1.2em;" />
+						</p:column>
+
+						<p:column headerText="Horário">
+							<h:outputText value="#{ip.data}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Operacional">
+							<p:commandButton styleClass="green-btn" style="width:100%;"
+								icon="ui-icon-check" value="Entregar" process="@this"
+								update="frm" action="#{cozinhaBean.liberarPedido}">
+								<f:setPropertyActionListener value="#{ip}"
+									target="#{cozinhaBean.ipSelecionado}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+
+
+
+
+
+
+
+
+
+				</div>
+
+
+
+
+			</div>
+
+
+
+		</h:form>
+
+	</ui:define>
+
+
+
+
+</ui:composition>

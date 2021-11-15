@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+
+	<ui:define name="content">
+
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{reservaBean.preRender}" type="preRenderView" />
+		</f:metadata>
+
+
+		<h:form id="frm">
+
+			<p:messages closable="true" />
+			<h3>Reserva de mesa</h3>
+
+
+
+			<div class="card">
+				<div class="container-fluid">
+					<div class="row" style="margin-bottom: 5px;">
+						<div class="col-md-3 col-sm-offset-2">
+							<p:outputLabel value="Dia e hora (dia/mês/ano hora/minuto)  : "
+								style=" text-align: center !important ;" />
+
+						</div>
+
+						<div class="col-md-2 ">
+							<p:inputMask styleClass="larguraMax" mask="99/99/9999  99:99"
+								value="#{reservaBean.reserva.data}" required="true"
+								requiredMessage="Data : precisa ser preenchido .">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</p:inputMask>
+						</div>
+
+					</div>
+
+					<div>
+						<p:dataGrid var="m" columns="3" value="#{reservaBean.mesas}"
+							layout="grid">
+
+							<f:facet name="header">Mesas</f:facet>
+
+							<p:panel header="Mesa #{m.numeroMesa}"
+								style="text-align:center;background-color:green;">
+								<h:panelGrid columns="1" style="width:100%;">
+									<h:graphicImage
+										value="http://vignette2.wikia.nocookie.net/clubpenguin/images/b/b8/Ice_Coffee_Table_icon.png/revision/latest?cb=20140814025448"
+										width="60" height="40" />
+								</h:panelGrid>
+								<p:commandButton value="Reservar" action="#{reservaBean.salvar}"
+									process="frm" update="frm">
+									<f:setPropertyActionListener value="#{m}"
+										target="#{reservaBean.reserva.mesa}" />
+								</p:commandButton>
+							</p:panel>
+
+
+						</p:dataGrid>
+
+					</div>
+
+					<div>
+						<h:panelGroup id="panelCliente1"
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') || permissoesBean.acessos.contains('VENDEDOR') }">
+							<h3>Deseja identificar o cliente?</h3>
+
+							<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+								<p:inputText id="nome" styleClass="larguraMax"
+									value="#{reservaBean.filter.nome}" />
+								<p:outputLabel for="nome" value="Nome" />
+							</h:panelGroup>
+							<br />
+							<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+								<p:inputText id="user" styleClass="larguraMax"
+									value="#{reservaBean.filter.usuario}" />
+								<p:outputLabel for="user" value="Usuário" />
+							</h:panelGroup>
+							<br />
+							<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+								<p:inputText id="cpf" styleClass="larguraMax"
+									value="#{reservaBean.filter.cpf}" />
+								<p:outputLabel for="cpf" value="Cpf" />
+							</h:panelGroup>
+
+							<br />
+							<p:commandButton value="Buscar" styleClass="larguraMax"
+								process="@form" update="@form" immediate="true"
+								action="#{reservaBean.findCliente}" />
+							<br />
+							<br />
+						</h:panelGroup>
+
+						<h:panelGroup id="panelCliente2"
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') || permissoesBean.acessos.contains('VENDEDOR') }">
+							<p:dataTable var="c" paginator="true" rows="10" reflow="true"
+								rowIndexVar="rowIndex" value="#{reservaBean.clientes}"
+								rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+								emptyMessage="Nenhum cliente encontrado">
+
+								<p:column headerText="Nome">
+									<h:outputText value="#{c.nome} " style="font-size:1.2em;" />
+								</p:column>
+								<p:column headerText="Cpf">
+									<h:outputText value="#{c.cpf} " style="font-size:1.2em;" />
+								</p:column>
+								<p:column headerText="Usuario">
+									<h:outputText value="#{c.usuario} " style="font-size:1.2em;" />
+								</p:column>
+								<p:column headerText="Operacional">
+
+									<p:commandButton value="Selecionar" styleClass="larguraMax"
+										process="@this" update="@form">
+										<f:setPropertyActionListener value="#{c}"
+											target="#{reservaBean.pessoaSelecionada}" />
+									</p:commandButton>
+
+								</p:column>
+
+							</p:dataTable>
+
+							<h:panelGroup rendered="#{reservaBean.pessoaSelecionada != null}">
+								<h4>
+									Cliente selecionado : <strong>
+										#{reservaBean.pessoaSelecionada.nome}</strong>
+								</h4>
+							</h:panelGroup>
+
+
+						</h:panelGroup>
+
+					</div>
+
+				</div>
+			</div>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

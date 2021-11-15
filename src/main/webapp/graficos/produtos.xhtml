@@ -1,0 +1,488 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<script type="text/javascript">
+			function skinChart() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#E91E63', '#4CAF50',
+						'#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinBar() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BarRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinArea() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#FFC107', '#4CAF50' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinBubble() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BubbleRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinZoom() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinPie() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#E91E63', '#4CAF50',
+						'#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77',
+					}
+				};
+				this.cfg.seriesDefaults = {
+					renderer : $.jqplot.PieRenderer,
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinDonut() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#E91E63', '#4CAF50',
+						'#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77',
+					}
+				};
+				this.cfg.seriesDefaults = {
+					renderer : $.jqplot.DonutRenderer,
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinBarAndLine() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#03A9F4', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 5,
+					renderer : $.jqplot.BarRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinMeterGauge() {
+				this.cfg.title = '';
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 5,
+					renderer : $.jqplot.MeterGaugeRenderer,
+					rendererOptions : {
+						shadow : false,
+						min : 100,
+						max : 800,
+						intervals : [ 200, 300, 400, 500, 600, 700, 800 ],
+						intervalColors : [ '#03A9F4', '#E91E63', '#4CAF50',
+								'#FFC107', '#03A9F4', '#E91E63', '#4CAF50' ]
+					}
+				}
+			}
+
+			function skinMultiAxis() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#4CAF50', '#FFC107' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BarRenderer,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+		</script>
+		<style type="text/css">
+.jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label,
+	.jqplot-x2axis-label {
+	color: #757575;
+}
+
+table.jqplot-table-legend {
+	background-color: #ffffff;
+	color: #757575;
+	border-color: #bdbdbd;
+}
+</style>
+
+	</ui:define>
+
+
+	<ui:define name="content">
+		<h:form id="frm">
+			<p:messages id="messages" closable="true" />
+			<div class="card">
+
+				<h2>Gráficos de produtos</h2>
+
+				<p:tabView>
+					<p:tab title="Todos os produtos">
+
+						<div class="container-fluid">
+							<div class="row" style="margin: 10px;">
+
+								<div class="col-md-2">
+									<p:outputLabel value="Selecione um período :" />
+								</div>
+								<div class="col-md-2">
+									<p:selectOneMenu value="#{produtosGraficsBean.radio1}"
+										style="width:100%;">
+										<f:selectItem itemLabel="7 dias" itemValue="1" />
+										<f:selectItem itemLabel="15 dias" itemValue="2" />
+										<f:selectItem itemLabel="30 dias" itemValue="3" />
+										<f:selectItem itemLabel="1 ano" itemValue="4" />
+										<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+										<p:ajax event="change"
+											listener="#{produtosGraficsBean.escolherRadio}"
+											update="@form" />
+									</p:selectOneMenu>
+								</div>
+
+
+							</div>
+							<h4>Ou</h4>
+							<h:panelGroup id="panel2">
+								<div class="row" style="margin: 10px;">
+									<div class="col-md-12">
+										<p:outputLabel style="text-align:center;" value="De" />
+										<p:calendar value="#{produtosGraficsBean.dtInicial}"
+											required="true" style="width:20px !important;"
+											requiredMessage="Data inicial precisa ser preenchida" />
+										<p:outputLabel style="text-align:center;" value="até" />
+										<p:calendar value="#{produtosGraficsBean.dtFinal}"
+											required="true"
+											requiredMessage="Data final precisa ser preenchida" />
+										<p:commandButton value="Processar" process="panel2"
+											update="@form" action="#{produtosGraficsBean.processar}" />
+									</div>
+								</div>
+							</h:panelGroup>
+
+
+
+
+
+
+
+							<br />
+							<h:panelGroup
+								rendered="#{produtosGraficsBean.produtoAdapter.size() == 0}">
+								<h5>Nenhum registro foi encontrado ...</h5>
+							</h:panelGroup>
+							<h:panelGroup
+								rendered="#{produtosGraficsBean.produtoAdapter.size() > 0}">
+
+								<p:chart type="pie" model="#{produtosGraficsBean.pieModel1}"
+									style="width:100%;height:400px" responsive="true" />
+
+								<p:dataTable value="#{produtosGraficsBean.produtoAdapter}"
+									paginator="true" reflow="true" var="p">
+
+									<p:column headerText="Produto">
+										<p:outputLabel value="#{p.produto.descricao}" />
+									</p:column>
+									<p:column headerText="Quantidade">
+										<p:outputLabel value="#{p.quantidade}" />
+									</p:column>
+									<p:column headerText="Valor">
+										<p:outputLabel value="R$ #{p.produto.preco}" />
+									</p:column>
+									<p:column headerText="Custo">
+										<p:outputLabel value="R$ #{p.produto.custo}" />
+									</p:column>
+									<p:column headerText="Lucro">
+										<p:outputLabel value="R$ #{p.lucro}" />
+									</p:column>
+
+								</p:dataTable>
+								<br />
+								<p:outputLabel
+									value="Custo total : R$ #{produtosGraficsBean.custoTotal}" />
+								<br />
+								<p:outputLabel
+									value="Lucro total : R$ #{produtosGraficsBean.lucroTotal}" />
+							</h:panelGroup>
+						</div>
+					</p:tab>
+					<p:tab title="Pesquisa individual">
+						<div class="container-fluid">
+
+							<h:panelGroup id="test">
+
+								<div class="row">
+									<div class="col-md-1">
+										<p:outputLabel value="Período : " />
+									</div>
+									<div class="col-md-2">
+										<p:selectOneMenu value="#{produtosGraficsBean.menuLineModel}"
+											styleClass="larguraMax" required="true"
+											requiredMessage="Você precisa selecionar um período.">
+											<f:selectItem itemLabel="7 dias" itemValue="2" />
+											<f:selectItem itemLabel="30 dias" itemValue="3" />
+											<f:selectItem itemLabel="1 ano" itemValue="4" />
+											<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+
+								<div class="row" style="margin-top: 3px;">
+									<div class="col-md-1">
+										<p:outputLabel value="Produto : " />
+									</div>
+									<div class="col-md-2">
+										<p:selectOneMenu styleClass="larguraMax" required="true"
+											value="#{produtosGraficsBean.produtoSelecionado}"
+											requiredMessage="Você precisa selecionar um produto">
+											<f:selectItems itemLabel="#{p.descricao}" var="p"
+												value="#{produtosGraficsBean.produtos}" itemValue="#{p.id}" />
+											<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+										</p:selectOneMenu>
+									</div>
+								</div>
+
+								<div class="row" style="margin-top: 3px;">
+
+									<div class="col-md-3">
+										<p:commandButton value="Pesquisar" process="test"
+											update="test :frm:messages"
+											action="#{produtosGraficsBean.action}"
+											styleClass="larguraMax" icon="ui-icon-search" />
+									</div>
+								</div>
+
+
+
+								<h:panelGroup
+									rendered="#{produtosGraficsBean.produtosGraficLine.size() > 0}">
+
+									<p:chart type="line" model="#{produtosGraficsBean.lineModel}"
+										rendered="#{produtosGraficsBean.lineModel != null}"
+										responsive="true" style="height:300px;" />
+
+									<p:dataTable value="#{produtosGraficsBean.consultaGraficLine}"
+										paginator="true" reflow="true" var="p">
+
+										<p:column headerText="Produto">
+											<p:outputLabel value="#{p.produto.descricao}" />
+										</p:column>
+										<p:column headerText="Quantidade">
+											<p:outputLabel value="#{p.quantidade}" />
+										</p:column>
+										<p:column headerText="Valor unitário">
+											<p:outputLabel value="R$ #{p.produto.preco}" />
+										</p:column>
+										<p:column headerText="Custo">
+											<p:outputLabel value="R$ #{p.custo}" />
+										</p:column>
+										<p:column headerText="Lucro">
+											<p:outputLabel value="R$ #{p.lucro}" />
+										</p:column>
+
+									</p:dataTable>
+									<br />
+									<p:outputLabel
+										value="Custo total : R$ #{produtosGraficsBean.custoTotal}" />
+									<br />
+									<p:outputLabel
+										value="Lucro total : R$ #{produtosGraficsBean.lucroTotal}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</div>
+					</p:tab>
+				</p:tabView>
+
+
+
+
+
+
+
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

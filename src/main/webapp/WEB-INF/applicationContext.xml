@@ -1,0 +1,89 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+	<beans:bean id="appUserDetailsService" class="com.projeto.security.AppUserDetailsService" />
+
+	<beans:bean id="exceptionTranslationFilter"
+		class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<beans:property name="accessDeniedHandler" ref="jsfAccessDeniedHandler" />
+		<beans:property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
+	</beans:bean>
+
+	<beans:bean id="jsfAccessDeniedHandler" class="com.projeto.security.JsfAccessDeniedHandler">
+		<beans:property name="loginPath" value="/access.xhtml" />
+		<beans:property name="contextRelative" value="true" />
+	</beans:bean>
+
+	<beans:bean id="authenticationEntryPoint"
+		class="com.projeto.security.JsfLoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/login.xhtml" />
+		<beans:property name="redirectStrategy" ref="jsfRedirectStrategy" />
+	</beans:bean>
+
+	<beans:bean id="jsfRedirectStrategy" class="com.projeto.security.JsfRedirectStrategy" />
+
+	<http pattern="/login.xhtml" security="none" />
+	<http pattern="/register.xhtml" security="none" />
+	<http pattern="/404.xhtml" security="none" />
+	<http pattern="/error.xhtml" security="none" />
+	<http pattern="/javax.faces.resource/**" security="none" />
+
+
+	<http auto-config="false" use-expressions="true">
+		<custom-filter ref="exceptionTranslationFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+		<intercept-url pattern="/realTime.xhtml" access="hasAnyRole('ADMINISTRADORES','VENDEDOR')" />
+		<intercept-url pattern="/access.xhtml" access="isAuthenticated()" />
+		<intercept-url pattern="/metas.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/graficos/produtos.xhtml"
+			access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/graficos/pedidos.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/graficos/clientes.xhtml"
+			access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/pedidos.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/produto/novoProduto.xhtml"
+			access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/produto/produtos.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/categoria/novaCategoria.xhtml"
+			access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/categoria/categorias.xhtml"
+			access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/cliente/cliente.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/cliente/clientes.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/metas.xhtml" access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/venda.xhtml"
+			access="hasAnyRole('ADMINISTRADORES','VENDEDOR')" />
+		<intercept-url pattern="/pedido.xhtml"
+			access="hasAnyRole('ADMINISTRADORES','VENDEDOR')" />
+		<intercept-url pattern="/cozinha.xhtml"
+			access="hasAnyRole('ADMINISTRADORES','VENDEDOR')" />
+		<intercept-url pattern="/retirada.xhtml"
+			access="hasAnyRole('ADMINISTRADORES','VENDEDOR')" />
+
+
+
+		<intercept-url pattern="/**"
+			access="hasAnyRole('ADMINISTRADORES','CLIENTE','VENDEDOR')" />
+		<form-login login-page="/login.xhtml" default-target-url="/"
+			always-use-default-target="true" authentication-failure-url="/login.xhtml?invalid=true" />
+		<logout logout-url="/j_spring_security_logout"
+			invalidate-session="true" />
+
+
+
+
+
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="appUserDetailsService">
+
+
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

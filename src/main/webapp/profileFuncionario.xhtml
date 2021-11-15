@@ -1,0 +1,334 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{profileBean.preRender}" type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<div class="card">
+				<p:messages id="messages" closable="true" />
+				<h2 class="box-title">Profile</h2>
+
+				<div class="container-fluid">
+					<h:panelGroup id="panelDadosPessoais">
+						<p:panelGrid id="masterPanel" columns="1" layout="grid"
+							styleClass="panelgrid-noborder ui-fluid"
+							style="padding-top: 20px; margin-bottom: 40px;">
+
+							<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+								<p:inputText id="nome" value="#{profileBean.funcionario.nome}" />
+								<p:outputLabel for="nome" value="Nome" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="sobrenome"
+									value="#{profileBean.funcionario.sobrenome}" />
+								<p:outputLabel for="sobrenome" value="Sobrenome" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputMask id="cpf" value="#{profileBean.funcionario.cpf}"
+									mask="999.999.999-99" />
+								<p:outputLabel for="cpf" value="Cpf" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="email" value="#{profileBean.funcionario.email}" />
+								<p:outputLabel for="email" value="Email" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputMask id="nascimento"
+									value="#{profileBean.funcionario.nascimento}" mask="99/99/9999">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:inputMask>
+								<p:outputLabel for="nascimento" value="Nascimento" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+								<p:inputText id="usuario"
+									value="#{profileBean.funcionario.usuario}" />
+								<p:outputLabel for="usuario" value="Usuário" />
+							</h:panelGroup>
+
+
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputMask id="telefone"
+									value="#{profileBean.funcionario.telefone}"
+									mask="(99)9999-9999" />
+								<p:outputLabel for="telefone" value="Telefone" />
+							</h:panelGroup>
+
+						</p:panelGrid>
+
+						<p:commandButton styleClass="amber-btn larguraMax" value="Editar"
+							process="panelDadosPessoais messages"
+							update="panelDadosPessoais messages"
+							action="#{profileBean.editarFuncionario}" />
+
+
+					</h:panelGroup>
+					<h3>Endereços</h3>
+
+					<p:dataTable paginator="true" id="enderecos" rowIndexVar="rowIndex"
+						rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+						value="#{profileBean.funcionario.enderecos}" var="e">
+						<p:column headerText="Descrição">
+							<p:outputLabel value="#{e.descricao}" />
+						</p:column>
+						<p:column headerText="Operacional">
+							<div style="text-align: center;">
+								<p:commandButton styleClass="teal-btn" icon="ui-icon-edit"
+									process="@this" update=":frm:itemPanel3"
+									oncomplete="PF('DialogEdicaoEndereco').show()">
+									<f:setPropertyActionListener value="#{e}"
+										target="#{profileBean.enderecoEdicao}" />
+								</p:commandButton>
+								<p:commandButton icon="ui-icon-remove-circle"
+									oncomplete="PF('DialogConfirmacao').show()"
+									styleClass="red-btn" style="margin-top:2px;" process="@this"
+									update=":frm:dialogExclusao">
+									<f:setPropertyActionListener value="#{e}"
+										target="#{profileBean.enderecoEdicao}" />
+								</p:commandButton>
+							</div>
+						</p:column>
+					</p:dataTable>
+					<br />
+					<p:commandButton styleClass="green-btn larguraMax"
+						value="Cadastrar endereço"
+						oncomplete="PF('DialogEndereco').show()" process="@this"
+						update="@this" />
+
+				</div>
+			</div>
+
+			<p:dialog widgetVar="DialogEndereco" closable="true"
+				header="Criação de endereço  " resizable="true"
+				style="min-width: 50%" responsive="true">
+				<h:panelGroup id="itemPanel2">
+					<p:messages id="msgDialog2" autoUpdate="false" />
+
+					<h:panelGroup id="panelEndereco">
+
+						<div class="container-fluid">
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Descrição :" for="txtDesc" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtDesc" styleClass="larguraMax"
+										value="#{profileBean.endereco.descricao}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Rua :" for="txtRua" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtRua" styleClass="larguraMax"
+										value="#{profileBean.endereco.rua}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Número :" for="txtNumero" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtNumero" styleClass="larguraMax"
+										value="#{profileBean.endereco.numero}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Bairro :" for="txtBairro" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtBairro" styleClass="larguraMax"
+										value="#{profileBean.endereco.bairro}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Complemento :" for="txtComplemento" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtComplemento" styleClass="larguraMax"
+										value="#{profileBean.endereco.complemento}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Cep: :" for="txtCep" />
+								</div>
+								<div class="col-md-8">
+									<p:inputMask id="txtCep" styleClass="larguraMax"
+										value="#{profileBean.endereco.cep}" mask="99999-999" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-6">
+									<p:commandButton value="Cadastrar"
+										styleClass="larguraMax green-btn" icon="ui-icon-check"
+										oncomplete="if (!args.validationFailed) PF('DialogEndereco').hide()"
+										process="panelEndereco msgDialog2"
+										action="#{profileBean.cadastrarEnderecoFuncionario}"
+										update="panelEndereco  msgDialog2 :frm:enderecos " />
+
+
+								</div>
+								<div class="col-md-6">
+									<p:commandButton value="Cancelar" icon="ui-icon-remove-circle"
+										styleClass="larguraMax red-btn" process="@this" update="@this"
+										oncomplete="PF('DialogEndereco').hide()" />
+								</div>
+							</div>
+
+						</div>
+
+					</h:panelGroup>
+				</h:panelGroup>
+			</p:dialog>
+
+
+			<p:dialog widgetVar="DialogEdicaoEndereco" closable="true"
+				id="dialogEditEnde" header="Edição de endereço  " resizable="true"
+				style="min-width: 50%" responsive="true">
+				<h:panelGroup id="itemPanel3">
+					<p:messages id="msgDialog3" autoUpdate="false" />
+
+					<h:panelGroup id="panelEndereco2">
+
+						<div class="container-fluid">
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Descrição :" for="txtDesc2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtDesc2" styleClass="larguraMax"
+										value="#{profileBean.enderecoEdicao.descricao}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Rua :" for="txtRua2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtRua2" styleClass="larguraMax"
+										value="#{profileBean.enderecoEdicao.rua}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Número :" for="txtNumero2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtNumero2" styleClass="larguraMax"
+										value="#{profileBean.enderecoEdicao.numero}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Bairro :" for="txtBairro2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtBairro2" styleClass="larguraMax"
+										value="#{profileBean.enderecoEdicao.bairro}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Complemento :" for="txtComplemento2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtComplemento2" styleClass="larguraMax"
+										value="#{profileBean.enderecoEdicao.complemento}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Cep: " for="txtCep2" />
+								</div>
+								<div class="col-md-8">
+									<p:inputMask id="txtCep2" styleClass="larguraMax"
+										value="#{profileBean.enderecoEdicao.cep}" mask="99999-999" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-6">
+									<p:commandButton value="Editar"
+										styleClass="larguraMax green-btn" icon="ui-icon-check"
+										oncomplete="if (!args.validationFailed) PF('DialogEdicaoEndereco').hide()"
+										process="@this panelEndereco2"
+										action="#{profileBean.editarEnderecoFuncionario}"
+										update="@this panelEndereco2  :frm:enderecos " />
+
+								</div>
+								<div class="col-md-6">
+									<p:commandButton value="Cancelar" icon="ui-icon-remove-circle"
+										styleClass="larguraMax red-btn" process="@this" update="@this"
+										oncomplete="PF('DialogEdicaoEndereco').hide()" />
+								</div>
+							</div>
+
+						</div>
+
+					</h:panelGroup>
+				</h:panelGroup>
+			</p:dialog>
+
+			<h:panelGroup id="dialogExclusao">
+				<p:dialog widgetVar="DialogConfirmacao" closable="true"
+					header="Tem certeza que deseja excluir o endereco : #{profileBean.enderecoEdicao.descricao}  ? "
+					resizable="true" responsive="true">
+
+
+
+					<h:panelGroup>
+						<div class="row">
+							<div class="col-md-6">
+								<p:commandButton value="Sim"
+									oncomplete="if (!args.validationFailed) PF('DialogConfirmacao').hide()"
+									process="@this" styleClass="larguraMax green-btn"
+									action="#{profileBean.removerFuncionario}" update="enderecos" />
+							</div>
+							<div class="col-md-6">
+								<p:commandButton value="Não" process="@this" update="@this"
+									style="margin-top:3px;"
+									oncomplete="PF('DialogConfirmacao').hide()"
+									styleClass="larguraMax red-btn" />
+							</div>
+						</div>
+
+
+					</h:panelGroup>
+
+
+
+
+
+				</p:dialog>
+			</h:panelGroup>
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

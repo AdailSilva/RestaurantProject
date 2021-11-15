@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{produtoBean.carregarCategorias}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<div class="card">
+				<p:messages closable="true" />
+				<h3 class="box-title">Gestão de mesas</h3>
+				<p:tabView>
+					<p:tab title="Juntar mesas">
+						<h3>Mesas disponiveis</h3>
+						<ui:remove>
+							<p:dataList value="#{mesasBean.mesasDisponiveis}" var="m"
+								emptyMessage="Não existem mesas disponíveis">
+								<p:outputLabel value="Mesa #{m.numeroMesa}" />
+
+							</p:dataList>
+						</ui:remove>
+						<p:selectManyCheckbox id="grid2" layout="responsive" columns="3"
+							value="#{mesasBean.mesasSelecionadas}">
+							<f:selectItems value="#{mesasBean.mesasDisponiveis}" var="m"
+								itemLabel="Mesa #{m.numeroMesa}" itemValue="#{m.numeroMesa}" />
+						</p:selectManyCheckbox>
+						<br />
+						<p:commandButton value="Adicionar" styleClass="green-btn"
+							action="#{mesasBean.adicionarMesas}" process="@form"
+							update="@form" />
+
+						<br />
+						<br />
+
+						<p:commandButton value="Processar" styleClass="larguraMax"
+							process="@form" update="@form" action="#{mesasBean.processar}" />
+						<h:panelGroup rendered="#{mesasBean.mesaItem}">
+							<h4>Relacionadas</h4>
+							<p:dataTable value="#{mesasBean.mesas}" var="m"
+								rowIndexVar="rowIndex"
+								rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}">
+
+								<p:column headerText="Mesa">
+									<p:outputLabel value="#{m.numeroMesa}" />
+								</p:column>
+
+								<p:column headerText="Utilidade">
+									<p:commandButton value="Remover"
+										action="#{mesasBean.removerMesa}"
+										styleClass="larguraMax red-btn" process="@form" update="@form">
+										<f:setPropertyActionListener value="#{m}"
+											target="#{mesasBean.mesaSelecionada}" />
+									</p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+						</h:panelGroup>
+					</p:tab>
+					<p:tab title="Separar mesas" id="tabDesagrupar">
+
+						<h3>Mesas agrupadas</h3>
+						<br />
+
+						<p:dataTable value="#{mesasBean.gruposAtivos}" var="gm"
+							rowIndexVar="rowIndex"
+							rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+							emptyMessage="Nenhum agrupamento encontrado." id="mesasAgrupadas">
+
+							<p:column headerText="Mesas agrupadas">
+								<p:outputLabel value="#{gm.numeroMesas}" />
+							</p:column>
+
+							<p:column headerText="Data inicial">
+								<p:outputLabel value="#{gm.dataInicio}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</p:outputLabel>
+							</p:column>
+
+							<p:column headerText="Operacional">
+								<p:commandButton value="Desagrupar" process="@form"
+									update="@form" styleClass="larguraMax red-btn"
+									action="#{mesasBean.desagruparMesas}">
+									<f:setPropertyActionListener value="#{gm}"
+										target="#{mesasBean.grupoSelecionado}" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+
+					</p:tab>
+
+				</p:tabView>
+
+
+
+			</div>
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,174 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+	<ui:define name="head">
+		<script type="text/javascript">
+			//<![CDATA[
+			function skinChart() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#FFC107', '#03A9F4' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#EEEEEE',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#212121'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+			//]]>
+		</script>
+		<style type="text/css">
+.main-content {
+	padding: 0;
+}
+</style>
+	</ui:define>
+	<ui:define name="content">
+
+		<div class="ui-g dashboard">
+			<h:panelGroup
+				rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES')}">
+				<div class="ui-g-12 ui-md-4">
+					<div class="card overview">
+						<div class="overview-content clearfix">
+							<span class="overview-title">Pedidos</span> <span
+								class="overview-badge"></span> <span class="overview-detail">R$
+								#{dashboardBean.pedidosDia == null ? 0 :
+								dashboardBean.pedidosDia} / dia</span>
+						</div>
+						<div class="overview-footer">
+							<p:graphicImage name="images/dashboard/sales.svg"
+								library="ultima-layout" style="width: 100%" />
+						</div>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="card overview">
+						<div class="overview-content clearfix">
+							<span class="overview-title">Pedidos</span> <span
+								class="overview-badge"></span> <span class="overview-detail">R$
+								#{dashboardBean.pedidosSemana == null ? 0 :
+								dashboardBean.pedidosSemana} / semana</span>
+						</div>
+						<div class="overview-footer">
+							<p:graphicImage name="images/dashboard/views.svg"
+								library="ultima-layout" style="width: 100%" />
+						</div>
+					</div>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="card overview">
+						<div class="overview-content clearfix">
+							<span class="overview-title">Delivery</span> <span
+								class="overview-badge"></span> <span class="overview-detail">R$
+								#{dashboardBean.deliveryDia == null ? 0 :
+								dashboardBean.deliveryDia} / dia</span>
+						</div>
+						<div class="overview-footer">
+							<p:graphicImage name="images/dashboard/progress.svg"
+								library="ultima-layout" style="width: 100%" />
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+			<h:panelGroup
+				rendered="#{permissoesBean.acessos.contains('VENDEDOR') or permissoesBean.acessos.contains('ADMINISTRADORES')}">
+
+				<div class="ui-g-12 ui-md-6 ui-lg-3">
+					<p:link outcome="/realTime">
+
+						<div class="ui-g card colorbox colorbox-1">
+
+							<div class="ui-g-4">
+								<i class="material-icons">&#xE86C;</i>
+							</div>
+							<div class="ui-g-8">
+								<span class="colorbox-name">Pedidos diários</span> <span
+									class="colorbox-count">#{dashboardBean.pedidosDiarios}</span>
+
+							</div>
+
+						</div>
+
+					</p:link>
+				</div>
+
+
+
+				<div class="ui-g-12 ui-md-6 ui-lg-3">
+					<p:link outcome="/cozinha">
+						<div class="ui-g card colorbox colorbox-2">
+							<div class="ui-g-4">
+								<i class="material-icons">restaurant_menu</i>
+							</div>
+							<div class="ui-g-8">
+								<span class="colorbox-name">Demandas cozinha</span> <span
+									class="colorbox-count">#{dashboardBean.cozinha}</span>
+							</div>
+						</div>
+					</p:link>
+				</div>
+
+				<div class="ui-g-12 ui-md-6 ui-lg-3">
+					<p:link outcome="/retirada">
+						<div class="ui-g card colorbox colorbox-3">
+							<div class="ui-g-4">
+								<i class="material-icons">assessment</i>
+							</div>
+							<div class="ui-g-8">
+								<span class="colorbox-name">Demandas garçon</span> <span
+									class="colorbox-count">#{dashboardBean.garcon}</span>
+							</div>
+						</div>
+					</p:link>
+				</div>
+				<div class="ui-g-12 ui-md-6 ui-lg-3">
+					<p:link outcome="/realTime">
+						<div class="ui-g card colorbox colorbox-4">
+							<div class="ui-g-4">
+								<i class="material-icons">trending_up</i>
+							</div>
+							<div class="ui-g-8">
+								<span class="colorbox-name">Itens diários</span> <span
+									class="colorbox-count">#{dashboardBean.itensDiarios}</span>
+							</div>
+						</div>
+					</p:link>
+				</div>
+			</h:panelGroup>
+			<div class="ui-g-12">
+
+
+				<p:schedule id="schedule" value="#{dashboardBean.eventModel}"
+					widgetVar="myschedule" timeZone="GMT+2" />
+
+			</div>
+
+
+
+
+		</div>
+
+
+		
+
+	</ui:define>
+
+</ui:composition>

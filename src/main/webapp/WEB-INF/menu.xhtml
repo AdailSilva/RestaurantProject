@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pu="http://primefaces.org/ultima">
+
+	<h:form id="menuform">
+		<div class="layout-menu #{guestPreferences.menuClass}">
+			<div class="nano">
+				<div class="nano-content menu-scroll-content">
+					<ui:fragment
+						rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
+						<div class="profile">
+							<div class="profile-image"></div>
+							<a id="profile-options" href="#"> <span class="profile-name">#{permissoesBean.usuarioSistema.usuario.nome}</span>
+								<i class="material-icons">&#xE313;</i>
+							</a>
+						</div>
+						<ui:remove>
+							<h:outputText
+								value="#{permissoesBean.usuarioSistema.usuario.nome} " />
+						</ui:remove>
+						<ul id="profile-menu" class="ultima-menu">
+							<li id="profile" role="menuitem"><a
+								href="http://localhost:8080/Projeto/#{profileBean.profileURL}"
+								class="ripplelink"> <i class="material-icons">person</i> <span>Profile</span>
+							</a></li>
+							<li role="menuitem"><a
+								href="http://localhost:8080/Projeto/privacidade.xhtml"
+								class="ripplelink"> <i class="material-icons">security</i> <span>Privacy</span>
+							</a></li>
+							<li role="menuitem"><a
+								href="http://localhost:8080/Projeto/j_spring_security_logout"
+								class="ripplelink"> <i class="material-icons">power_settings_new</i>
+									<span>Logout</span>
+							</a></li>
+						</ul>
+					</ui:fragment>
+
+					<pu:menu widgetVar="me">
+						<p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;"
+							outcome="/dashboard" />
+						<p:submenu
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES')}"
+							label="Produto" icon="group_work">
+							<p:menuitem value="Novo" outcome="/produto/novoProduto"
+								icon="panorama_fish_eye" />
+							<p:menuitem value="Todos" outcome="/produto/produtos"
+								icon="panorama_fish_eye" />
+
+						</p:submenu>
+
+						<p:submenu
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES')}"
+							label="Categoria" icon="archive">
+							<p:menuitem value="Novo" outcome="/categoria/novaCategoria"
+								icon="panorama_fish_eye" />
+							<p:menuitem value="Todos" outcome="/categoria/categorias"
+								icon="panorama_fish_eye" />
+
+						</p:submenu>
+
+						<p:submenu
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES')}"
+							label="Cliente" icon="contacts">
+							<p:menuitem value="Novo" outcome="/cliente/cliente"
+								icon="panorama_fish_eye" />
+							<p:menuitem value="Todos" outcome="/cliente/clientes"
+								icon="panorama_fish_eye" />
+
+						</p:submenu>
+
+						<p:submenu
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES')}"
+							label="Funcionário" icon="contacts">
+							<p:menuitem value="Novo" outcome="/funcionario/funcionario"
+								icon="panorama_fish_eye" />
+							<p:menuitem value="Todos" outcome="/funcionario/funcionarios"
+								icon="panorama_fish_eye" />
+
+						</p:submenu>
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR') }"
+							value="Venda" outcome="/venda" icon="shopping_cart" />
+
+						<p:menuitem value="Delivery" outcome="/delivery"
+							icon="flight_takeoff" />
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR') }"
+							value="Fechar conta" outcome="/pedido" icon="payment" />
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR') }"
+							value="Demandas Cozinha" outcome="/cozinha" icon="kitchen" />
+
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR') }"
+							value="Demandas garçon" outcome="/retirada" icon="assignment" />
+
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR') }"
+							value="Juntar mesas" outcome="/grupoMesas" icon="extension" />
+
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+							value="Movimentação diária" outcome="/realTime"
+							icon="access_time" />
+						<p:submenu
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES')}"
+							label="Gráficos" icon="timeline">
+							<p:menuitem
+								rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+								value="Produtos" outcome="/graficos/produtos"
+								icon="panorama_fish_eye" />
+							<p:menuitem
+								rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+								value="Pedidos" outcome="/graficos/pedidos"
+								icon="panorama_fish_eye" />
+							<p:menuitem
+								rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+								value="Clientes" outcome="/graficos/clientes"
+								icon="panorama_fish_eye" />
+						</p:submenu>
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+							value="Pedidos" outcome="/pedidos" icon="library_books" />
+
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('CLIENTE') }"
+							value="Meus pedidos" outcome="/pedidosCliente"
+							icon="library_books" />
+
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+							value="Mesas" outcome="/statusMesas" icon="subtitles" />
+
+						<p:menuitem
+							rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') }"
+							value="Metas" outcome="/metas" icon="done" />
+
+						<p:menuitem value="Reservar mesa" outcome="/reservaMesa"
+							icon="label_outline" />
+							
+							<p:menuitem value="Minhas reservas" outcome="/minhasReservas"
+							icon="picture_in_picture" />
+
+
+
+
+
+					</pu:menu>
+				</div>
+			</div>
+		</div>
+	</h:form>
+</ui:composition>

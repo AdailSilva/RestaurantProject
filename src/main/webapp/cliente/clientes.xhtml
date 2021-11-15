@@ -1,0 +1,292 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+
+
+		<h:form id="frm">
+			<p:growl id="growl" showDetail="false" sticky="true" />
+			<h:panelGroup id="panelClientes">
+
+				<div class="card">
+					<p:messages closable="true" id="msg" />
+
+
+					<h3>Pesquisa de clientes</h3>
+
+					<div class="container-fluid">
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Nome :" for="txtNome" />
+							</div>
+							<div class="col-md-2">
+								<p:inputText id="txtNome" styleClass="larguraMax"
+									value="#{clienteBean.filtro.nome}" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Sobrenome :" for="txtSobrenome" />
+							</div>
+							<div class="col-md-2">
+								<p:inputText id="txtSobrenome" styleClass="larguraMax"
+									value="#{clienteBean.filtro.sobrenome}" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="CPF :" for="txtCpf" />
+							</div>
+							<div class="col-md-2">
+								<p:inputMask id="txtCpf" styleClass="larguraMax"
+									value="#{clienteBean.filtro.cpf}" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Nascimento :" for="txtNascimento" />
+							</div>
+							<div class="col-md-2">
+								<p:calendar id="txtNascimento" styleClass="larguraMax"
+									value="#{clienteBean.filtro.nascimento }" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Telefone :" for="txtTelefone" />
+							</div>
+							<div class="col-md-2">
+								<p:inputMask id="txtTelefone" styleClass="larguraMax"
+									value="#{clienteBean.filtro.telefone}" />
+							</div>
+						</div>
+
+
+
+						<p:commandButton value="Pesquisar" update="panelClientes clientes"
+							icon="ui-icon-search" process="panelClientes clientes"
+							styleClass="green-btn" action="#{clienteBean.listados}" />
+					</div>
+
+
+
+
+
+
+
+
+
+				</div>
+				<p:dataTable emptyMessage="Nenhum cliente encontrado." var="c"
+					rowIndexVar="rowIndex"
+					rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+					paginator="true" rows="10" id="clientes"
+					tableStyleClass="ui-table-columntoggle" reflow="true"
+					value="#{clienteBean.lista}">
+					<p:column headerText="Usuário">
+						<p:outputLabel value="#{c.usuario}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<p:outputLabel value="#{c.nome}" />
+					</p:column>
+					<p:column headerText="Sobrenome">
+						<p:outputLabel value="#{c.sobrenome}" />
+					</p:column>
+
+					<p:column headerText="Cpf">
+						<p:outputLabel value="#{c.cpf}" />
+					</p:column>
+					<p:column headerText="Email">
+						<p:outputLabel value="#{c.email}" rendered="#{c.email != null}" />
+						<p:outputLabel value="n/a" rendered="#{c.email == null}" />
+					</p:column>
+					<p:column headerText="Nascimento">
+						<p:outputLabel value="#{c.nascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Telefone">
+						<p:outputLabel value="#{c.telefone}" />
+					</p:column>
+					<p:column headerText="Operacional">
+						<p:button styleClass="teal-btn" icon="ui-icon-edit"
+							process="@this" outcome="/cliente/cliente">
+							<f:param name="cliente" value="#{c.id}" />
+						</p:button>
+						<p:commandButton icon="ui-icon-remove-circle" styleClass="red-btn"
+							style="margin-top:2px;" process="@this"
+							update=":frm:DialogExclusaoCliente"
+							oncomplete="PF('DialogConfirmacao').show()">
+							<f:setPropertyActionListener value="#{c}"
+								target="#{clienteBean.cliente}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
+
+			<p:dialog widgetVar="DialogConfirmacao" closable="true"
+				id="DialogExclusaoCliente"
+				header="Deseja excluir : #{clienteBean.cliente.nome}  ? "
+				resizable="true" style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel">
+					<p:messages id="msgDialog" autoUpdate="false" />
+
+					<h:panelGroup>
+						<p:commandButton value="Sim"
+							oncomplete="if (!args.validationFailed) PF('DialogConfirmacao').hide()"
+							process="itemPanel :frm:clientes " styleClass="larguraMax"
+							action="#{clienteBean.remover}" update="@form" />
+						<p:commandButton value="Não" process="@this" update="@this"
+							style="margin-top:3px;"
+							oncomplete="PF('DialogConfirmacao').hide()"
+							styleClass="larguraMax" />
+					</h:panelGroup>
+
+
+				</h:panelGroup>
+
+
+			</p:dialog>
+
+
+
+			<p:dialog widgetVar="DialogConfirmacaoEndereco" closable="true"
+				id="DialogConfirmacaoEndereco" header="Deseja excluir   ? "
+				resizable="true" style="min-width: 300px" responsive="true">
+				<h:panelGroup id="itemPanel3">
+					<p:messages id="msgDialog3" autoUpdate="false" />
+
+					<h:panelGroup>
+						<p:commandButton value="Sim"
+							oncomplete="if (!args.validationFailed) PF('DialogConfirmacaoEndereco').hide()"
+							update="@this growl " styleClass="larguraMax"
+							action="#{clienteBean.removerEndereco}" process="@this" />
+						<p:commandButton value="Não" style="margin-top:3px;"
+							oncomplete="PF('DialogConfirmacaoEndereco').hide()"
+							styleClass="larguraMax" />
+					</h:panelGroup>
+
+
+				</h:panelGroup>
+
+
+			</p:dialog>
+			<p:dialog widgetVar="DialogEndereco"
+				id="dialogEnderecoCriacaoAlteracao" closable="true" resizable="true"
+				style="min-width: 50%" responsive="true">
+				<h:panelGroup id="itemPanel5">
+					<p:messages id="msgDialog5" autoUpdate="false" />
+
+					<h:panelGroup id="panelEndereco5">
+						<h3>#{clienteBean.endereco.descricao == null ? 'Novo
+							endereço' : 'Edição endereço'}</h3>
+						<div class="container-fluid">
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Descrição :" for="txtDesc5" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtDesc5" styleClass="larguraMax"
+										value="#{clienteBean.endereco.descricao}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Rua :" for="txtRua5" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtRua5" styleClass="larguraMax"
+										value="#{clienteBean.endereco.rua}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Número :" for="txtNumero5" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtNumero5" styleClass="larguraMax"
+										value="#{clienteBean.endereco.numero}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Bairro :" for="txtBairro5" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtBairro5" styleClass="larguraMax"
+										value="#{clienteBean.endereco.bairro}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Complemento :" for="txtComplemento5" />
+								</div>
+								<div class="col-md-8">
+									<p:inputText id="txtComplemento5" styleClass="larguraMax"
+										value="#{clienteBean.endereco.complemento}" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-4">
+									<p:outputLabel value="Cep: :" for="txtCep5" />
+								</div>
+								<div class="col-md-8">
+									<p:inputMask id="txtCep5" styleClass="larguraMax"
+										value="#{clienteBean.endereco.cep}" mask="99999-999" />
+								</div>
+							</div>
+							<div class="row" style="margin-bottom: 5px;">
+
+								<div class="col-md-6">
+									<p:commandButton value="Cadastrar"
+										rendered="#{clienteBean.endereco.descricao == null}"
+										oncomplete="if (!args.validationFailed) PF('DialogEndereco').hide()"
+										process="panelEndereco5 msgDialog5" styleClass="larguraMax"
+										action="#{clienteBean.adicionarEnderecoEdicao}"
+										update="panelEndereco5  msgDialog5 " />
+									<p:commandButton value="Editar"
+										rendered="#{clienteBean.endereco.descricao != null}"
+										oncomplete="if (!args.validationFailed) PF('DialogEndereco').hide()"
+										process="panelEndereco5 msgDialog5" styleClass="larguraMax"
+										action="#{clienteBean.adicionarEnderecoEdicao}"
+										update="panelEndereco5  msgDialog5 " />
+								</div>
+								<div class="col-md-6">
+									<p:commandButton value="Cancelar"
+										oncomplete="PF('DialogEndereco').hide()"
+										styleClass="larguraMax" />
+								</div>
+
+							</div>
+
+						</div>
+					</h:panelGroup>
+				</h:panelGroup>
+			</p:dialog>
+
+
+
+
+
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

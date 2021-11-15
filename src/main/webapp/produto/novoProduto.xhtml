@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{produtoBean.carregarCategorias}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<div class="card">
+				<p:messages closable="true" />
+				<h3 class="box-title">Cadastro de produto</h3>
+
+				<div class="container-fluid">
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Descrição :" for="txtNome" />
+						</div>
+						<div class="col-md-2">
+							<p:inputText id="txtNome" styleClass="larguraMax"
+								value="#{produtoBean.produto.descricao}" />
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Preço :" for="txtPreco" />
+						</div>
+						<div class="col-md-2">
+							<p:inputText id="txtPreco" styleClass="larguraMax moeda "
+								value="#{produtoBean.produto.preco}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Custo :" for="txtCusto" />
+						</div>
+						<div class="col-md-2">
+							<p:inputText id="txtCusto" styleClass="larguraMax moeda "
+								value="#{produtoBean.produto.custo}">
+								<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+							</p:inputText>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Categoria :" id="categoria" />
+						</div>
+						<div class="col-md-2">
+							<p:selectOneMenu required="true"
+								styleClass="form-control larguraMax"
+								value="#{produtoBean.produto.categoria}"
+								requiredMessage="Categoria : precisa ser preenchido">
+								<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								<f:selectItems value="#{produtoBean.categorias}" var="e"
+									itemValue="#{e}" itemLabel="#{e.descricao}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<ui:remove>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Imagem :" />
+							</div>
+							<div class="col-md-2">
+								<p:commandButton value="Clique aqui" styleClass="larguraMax" />
+							</div>
+						</div>
+					</ui:remove>
+					<p:commandButton value="Cadastrar" update="frm" process="frm"
+						action="#{produtoBean.guardar}" icon="ui-icon-check"
+						styleClass="green-btn" />
+
+				</div>
+
+			</div>
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

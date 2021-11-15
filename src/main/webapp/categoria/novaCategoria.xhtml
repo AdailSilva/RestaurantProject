@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{produtoBean.carregarCategorias}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<div class="card">
+				<p:messages closable="true" />
+				<div class="box box-primary">
+
+					<h3>Cadastro de categoria</h3>
+
+
+
+
+					<div class="container-fluid">
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Nome :" for="txtNome" />
+							</div>
+							<div class="col-md-2">
+								<p:inputText id="txtNome" styleClass="larguraMax"
+									value="#{categoriaBean.categoria.descricao}" />
+							</div>
+						</div>
+						<div class="row" style="margin-bottom: 5px;">
+
+							<div class="col-md-2">
+								<p:outputLabel value="Tipo  :" for="menuTipo" />
+							</div>
+							<div class="col-md-2">
+								<p:selectOneMenu id="menuTipo" styleClass="larguraMax"
+									required="true" value="#{categoriaBean.categoria.tipo}"
+									requiredMessage="Tipo: precisa ser preenchido !">
+									<f:selectItem itemLabel="Bebida" itemValue="Bebida" />
+									<f:selectItem itemLabel="Refeição" itemValue="Refeicão" />
+									<f:selectItem itemLabel="Sobremesa" itemValue="Sobremesa" />
+									<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+								</p:selectOneMenu>
+							</div>
+						</div>
+					</div>
+
+
+
+
+					<p:commandButton value="Cadastrar" icon="ui-icon-check"
+						styleClass="green-btn" action="#{categoriaBean.guardar}"
+						update="@form" />
+
+
+
+				</div>
+
+			</div>
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

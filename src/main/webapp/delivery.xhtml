@@ -1,0 +1,369 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+	<ui:define name="content" style="padding-right:0;">
+
+
+
+
+
+		<h:form id="frm">
+
+
+			<h:panelGroup id="btnEmissaoPedido">
+				<p:commandButton value="Emitir Pedido"
+					style="width:100%; height:60px;margin-bottom:3px;"
+					oncomplete="PF('dialogPedido').show()"
+					rendered="#{deliveryBean.condicaoEmissaoPedido}" />
+			</h:panelGroup>
+
+
+			<h:panelGroup rendered="#{deliveryBean.panelCategorias}"
+				id="panelCategorias">
+				<p:messages showDetail="false" closable="true" />
+
+				<h3 class="box-title">Delivery - selecione uma opção</h3>
+
+
+
+				<div class="card">
+
+					<div class="card">
+
+
+
+						<div class="row">
+							<div class="col-xs-1"></div>
+							<div class="col-xs-3">
+								<p:commandLink style="margin-left:5px;margin-right:5px;"
+									action="#{deliveryBean.buscarBebidas}" process="@this"
+									update="@form">
+									<h:graphicImage value="resources\img\food.png"
+										style="width:100%;" />
+									<h5 style="text-align: center;">Bebidas</h5>
+								</p:commandLink>
+							</div>
+							<div class="col-xs-3">
+								<p:commandLink style="margin-left:5px;margin-right:5px;"
+									action="#{deliveryBean.buscarRefeicoes}" process="@this"
+									update="@form">
+									<h:graphicImage value="resources\img\food.png"
+										style="width:100%;" />
+									<h5 style="text-align: center;">Refeições</h5>
+								</p:commandLink>
+							</div>
+							<div class="col-xs-3">
+								<p:commandLink style="margin-left:5px;margin-right:5px;"
+									action="#{deliveryBean.buscarSobremesas}" process="@this"
+									update="@form">
+									<h:graphicImage value="resources\img\food.png"
+										style="width:100%;" />
+									<h5 style="text-align: center;">Sobremesas</h5>
+								</p:commandLink>
+							</div>
+							<div class="col-xs-2"></div>
+
+						</div>
+						<hr />
+
+
+						<br /> <br /> <br />
+						<h:panelGroup rendered="#{deliveryBean.categoriasB}">
+							<div class="row">
+								<ui:repeat var="a" value="#{deliveryBean.categorias}">
+									<div class="col-md-3" style="margin-bottom: 3px;">
+
+										<p:commandButton action="#{deliveryBean.filtrarProdutos}"
+											styleClass="larguraMax" icon="ui-icon-loyalty"
+											process="@this" update="@form" value="#{a.descricao}">
+											<f:setPropertyActionListener value="#{a}"
+												target="#{deliveryBean.categoriaSelecionada}" />
+										</p:commandButton>
+									</div>
+								</ui:repeat>
+							</div>
+						</h:panelGroup>
+					</div>
+					<h:panelGroup
+						rendered="#{permissoesBean.acessos.contains('ADMINISTRADORES') or permissoesBean.acessos.contains('VENDEDOR') }">
+						<div class="card">
+							<div class="row">
+								<div class="container">
+									<h:panelGroup class="col-md-6">
+
+										<h:panelGroup id="panelCliente1">
+											<h3>Deseja identificar o cliente?</h3>
+
+											<h:panelGroup styleClass="md-inputfield"
+												style="margin-top:10px;">
+												<p:inputText id="nome" styleClass="larguraMax"
+													value="#{deliveryBean.clienteFilter.nome}" />
+												<p:outputLabel for="nome" value="Nome" />
+											</h:panelGroup>
+											<br />
+											<h:panelGroup styleClass="md-inputfield"
+												style="margin-top:10px;">
+												<p:inputText id="user" styleClass="larguraMax"
+													value="#{deliveryBean.clienteFilter.usuario}" />
+												<p:outputLabel for="user" value="Usuário" />
+											</h:panelGroup>
+											<br />
+											<h:panelGroup styleClass="md-inputfield"
+												style="margin-top:10px;">
+												<p:inputText id="cpf" styleClass="larguraMax"
+													value="#{deliveryBean.clienteFilter.cpf}" />
+												<p:outputLabel for="cpf" value="Cpf" />
+											</h:panelGroup>
+
+											<br />
+											<p:commandButton value="Buscar" styleClass="larguraMax"
+												action="#{deliveryBean.buscarClientes}"
+												process="panelCliente1 panelCliente2"
+												update="panelCliente1 panelCliente2" />
+											<br />
+											<br />
+										</h:panelGroup>
+									</h:panelGroup>
+								</div>
+
+								<div class="row">
+									<div class="container">
+										<h:panelGroup id="panelCliente2">
+											<p:dataTable var="c" paginator="true" rows="10" reflow="true"
+												rowIndexVar="rowIndex"
+												rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+												emptyMessage="Nenhum cliente encontrado"
+												value="#{deliveryBean.clientes}">
+
+												<p:column headerText="Nome">
+													<h:outputText value="#{c.nome} " style="font-size:1.2em;" />
+												</p:column>
+												<p:column headerText="Cpf">
+													<h:outputText value="#{c.cpf} " style="font-size:1.2em;" />
+												</p:column>
+												<p:column headerText="Usuario">
+													<h:outputText value="#{c.usuario} "
+														style="font-size:1.2em;" />
+												</p:column>
+												<p:column headerText="Operacional">
+													<p:commandButton value="Selecionar" styleClass="larguraMax"
+														process="@this"
+														action="#{deliveryBean.carregarEnderecos()}"
+														update=":frm:panelCliente1 :frm:panelCliente2">
+														<f:setPropertyActionListener value="#{c}"
+															target="#{deliveryBean.clienteSelecionado}" />
+													</p:commandButton>
+												</p:column>
+
+											</p:dataTable>
+
+											<h:panelGroup
+												rendered="#{deliveryBean.clienteSelecionado != null}">
+												<h4>
+													Cliente selecionado : <strong>
+														#{deliveryBean.clienteSelecionado.nome}</strong>
+												</h4>
+											</h:panelGroup>
+
+
+										</h:panelGroup>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</h:panelGroup>
+				</div>
+
+
+
+
+
+
+
+
+
+			</h:panelGroup>
+
+
+
+			<h:panelGroup rendered="#{deliveryBean.panelProdutos}"
+				id="panelProdutos">
+				<p:growl id="messageProdutos" showDetail="false" life="150" />
+				<div class="card">
+					<div class="card">
+						<p:commandButton action="#{deliveryBean.retornarCategorias}"
+							process="@this" update="@form" icon="ui-icon-undo"
+							styleClass="amber-btn" value="Retornar" />
+
+					</div>
+
+					<div class="card">
+						<h3 style="text-align: center;">#{deliveryBean.categoriaSelecionada.descricao}</h3>
+
+						<h:panelGroup styleClass="md-inputfield">
+							<p:inputText styleClass="larguraMax" id="descricao"
+								value="#{deliveryBean.filtroProd}">
+								<p:ajax event="change" listener="#{deliveryBean.ajaxList}"
+									process="@this" update="@form" />
+							</p:inputText>
+							<p:outputLabel for="descricao" value="Digite o nome" />
+						</h:panelGroup>
+
+
+
+
+
+						<br /> <br />
+
+						<div class="row">
+							<ui:repeat var="a" value="#{deliveryBean.produtosFiltrados}"
+								id="eachProdutos">
+
+								<div class="col-md-3 col-sm-6 col-xs-12"
+									style="margin-bottom: 3px;">
+									<!-- 
+									<p:commandLink oncomplete="PF('DialogAdicaoItens').show()"
+										process="@this" update=":frm:dialogAdicaoItens">
+										 -->
+									<div
+										style="border: 2px solid black; width: 100%; padding: 5px; border-radius: 10px;">
+										<!-- 
+										<h:graphicImage
+											value="http://www.freeiconspng.com/uploads/lunch-icon-23.png"
+											width="100%" />
+											 -->
+										<h2 style="text-align: center;">#{a.descricao}</h2>
+										<h2 style="text-align: center; font-size: 100%; margin-top: 0">R$
+											#{a.preco}</h2>
+										<hr />
+										<h:panelGroup id="panelPrecoProduto">
+											<p:commandButton value="-" style="width:35%;height:40px"
+												action="#{deliveryBean.diminuirQTD}" process="@this"
+												update="panelPrecoProduto">
+												<f:setPropertyActionListener value="#{a}"
+													target="#{deliveryBean.produtoSelecionado}" />
+											</p:commandButton>
+											<h:inputText
+												style="width:27%;height:40px;text-align:center;border-style: solid;"
+												value="#{a.qtd}" id="qtdProduto" disabled="true" />
+											<p:commandButton value="+" style="width:35%;height:40px"
+												action="#{deliveryBean.adicionarQTD}" process="@this"
+												update="panelPrecoProduto">
+												<f:setPropertyActionListener value="#{a}"
+													target="#{deliveryBean.produtoSelecionado}" />
+											</p:commandButton>
+										</h:panelGroup>
+										<p:commandButton value="Adicionar produto"
+											style="width:100%;height:60px;margin-top:2px;"
+											action="#{deliveryBean.adicionarItemPedido}" process="@this"
+											update=":frm:btnEmissaoPedido :frm:messageProdutos :frm:tabelaItens">
+											<f:setPropertyActionListener value="#{a}"
+												target="#{deliveryBean.produtoSelecionado}" />
+										</p:commandButton>
+									</div>
+
+									<!-- 
+									</p:commandLink>
+									-->
+
+								</div>
+							</ui:repeat>
+						</div>
+
+
+
+
+
+					</div>
+
+
+
+
+				</div>
+
+			</h:panelGroup>
+
+			<p:dialog widgetVar="dialogPedido" closable="true" id="dialogPedido"
+				header="Confirmação pedido " resizable="true"
+				style="min-width: 300px" responsive="true">
+
+				<h:panelGroup id="panelEmitirPedido">
+					<p:messages showDetail="false" />
+					<p:dataTable value="#{deliveryBean.itens}" var="ip"
+						id="tabelaItens" rowIndexVar="rowIndex"
+						rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+						tableStyleClass="ui-table-columntoggle" reflow="true">
+						<p:column headerText="Descriao">
+							<h:outputText value="#{ip.produto.descricao}" />
+						</p:column>
+
+						<p:column headerText="Qtd">
+							<h:outputText value="#{ip.produto.qtd}"
+								style="text-align:center;" id="txtqtdDialog" />
+						</p:column>
+						<p:column headerText="Operacional">
+							<p:commandButton action="#{deliveryBean.diminuirQTDDialog}"
+								icon="ui-icon-exposure-neg-1" styleClass="red-btn"
+								process="@this"
+								update="txtqtdDialog :frm:panelProdutos :frm:panelEmitirPedido">
+								<f:setPropertyActionListener value="#{ip.produto}"
+									target="#{deliveryBean.produtoSelecionado}" />
+							</p:commandButton>
+							<p:commandButton action="#{deliveryBean.adicionarQTD}"
+								icon="ui-icon-exposure-plus-1" styleClass="green-btn"
+								process="@this"
+								update="txtqtdDialog :frm:panelProdutos :frm:panelEmitirPedido">
+								<f:setPropertyActionListener value="#{ip.produto}"
+									target="#{deliveryBean.produtoSelecionado}" />
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+					<h4>Escolha o endereço para entrega</h4>
+
+					<p:selectOneMenu styleClass="larguraMax" required="true"
+						value="#{deliveryBean.enderecoSelecionado}"
+						requiredMessage="Você precisa selecionar um endereço de entrega">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems
+							value="#{deliveryBean.clienteSelecionado == null ? deliveryBean.pessoa.enderecos : deliveryBean.clienteSelecionado.enderecos  }"
+							var="e" itemLabel="#{e.descricao}" />
+					</p:selectOneMenu>
+					<br />
+					<h:panelGroup id="panelObservacao">
+						<h3>Deseja escrever observações?</h3>
+						<p:inputTextarea style="width:100%;background-color:#B0C4DE;"
+							value="#{deliveryBean.pedido.observacaoCliente}"
+							autoResize="true" rows="4" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<!-- 
+
+<p:commandButton value="OK"
+					action="Venda.xhtml ?faces-redirect=true " process="@this"
+					update="@this" />
+ -->
+				<p:commandButton value="Emitir pedido"
+					action="#{deliveryBean.emitirPedido}" process="frm"
+					update="panelEmitirPedido " id="btnEmitirPedido" />
+
+
+			</p:dialog>
+
+
+
+		</h:form>
+
+	</ui:define>
+
+
+
+
+</ui:composition>

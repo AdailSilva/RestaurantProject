@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+	<ui:define name="content" style="padding-right:0;">
+		<f:metadata>
+			<f:viewParam name="dummy" />
+			<f:event listener="#{cozinhaBean.preRenderRetirada}"
+				type="preRenderView" />
+		</f:metadata>
+
+		<h:form id="frm">
+
+
+
+
+
+
+			<h2 style="text-align: center;">Retiradas pendentes</h2>
+
+			<div class="card">
+
+				<p:dataTable value="#{cozinhaBean.itensRetirada}" var="ip" rows="10"
+					rowIndexVar="rowIndex"
+					rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+					paginator="true" reflow="true"
+					emptyMessage="Nenhuma retirada pendente">
+
+					<p:column headerText="Descrição">
+						<h:outputText value="#{ip.produto.descricao}"
+							style="font-size:1.4em;" />
+					</p:column>
+					<p:column headerText="Quantidade">
+						<h:outputText value="#{ip.quantidade} unid."
+							style="font-size:1.2em;" />
+					</p:column>
+
+					<p:column headerText="Mesa">
+
+						<h:outputText
+							value="Mesa #{ip.pedido.mesa.relacionamento == null ? ip.pedido.mesa.numeroMesa : ip.pedido.mesa.relacionamento.numeroMesas  }"
+							style="font-size:1.2em;" />
+					</p:column>
+
+					<p:column headerText="Horário">
+						<h:outputText value="#{ip.data}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Operacional">
+						<p:commandButton styleClass="green-btn" style="width:100%;"
+							value="Entregar" process="@this" update="frm"
+							action="#{cozinhaBean.entregarPedido}">
+							<f:setPropertyActionListener value="#{ip}"
+								target="#{cozinhaBean.ipSelecionado}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+
+
+
+
+
+
+
+
+			</div>
+
+
+
+
+
+
+
+
+		</h:form>
+
+	</ui:define>
+
+
+
+
+</ui:composition>

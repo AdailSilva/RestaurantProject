@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+
+
+	<ui:define name="content">
+		<h:form id="frm">
+			<div class="card">
+				<div class="container-fluid">
+
+
+					<h3>Meus pedidos</h3>
+
+					<p:outputLabel value="" />
+					<p:dataTable paginator="true" rows="10" reflow="true"
+						rowIndexVar="rowIndex"
+						rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+						value="#{pedidosClienteBean.pedidos}" var="p">
+						<p:column headerText="Mesa">
+							<h:panelGroup rendered="#{p.mesa != null}">
+								<p:outputLabel value="#{p.mesa}" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.mesa == null}">
+								<p:outputLabel value="n/a" />
+							</h:panelGroup>
+						</p:column>
+						<p:column headerText="Valor total">
+							<p:outputLabel value="R$ #{p.valorTotal}" />
+						</p:column>
+						<p:column headerText="Data">
+							<p:outputLabel value="#{p.data}">
+								<f:convertDateTime pattern="dd/MM/yyyy hh:mm"
+									timeZone="America/Fortaleza" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Status">
+							<h:panelGroup rendered="#{p.status == 'ANDAMENTO'}">
+								<p:button styleClass="amber-btn larguraMax" value="Andamento "
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.status == 'CANCELADO'}">
+								<p:button styleClass="red-btn larguraMax"
+									outcome="detalhesPedido" value="Cancelado">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.status == 'PAGO'}">
+								<p:button styleClass="green-btn larguraMax" value="Pago"
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{p.status == 'ENVIADO'}">
+								<p:button styleClass="cyan-btn larguraMax" value="Enviado"
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+
+
+						</p:column>
+
+
+
+						<p:column headerText="Funcionário">
+							<p:outputLabel value="#{p.funcionario.nome}" />
+						</p:column>
+						<p:column headerText="Delivery">
+							<h:panelGroup rendered="#{p.delivery==false}">
+								<p:button styleClass="red-btn larguraMax" value="Não"
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.delivery==true}">
+								<p:button styleClass="green-btn larguraMax" value="Sim"
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+
+						</p:column>
+
+					</p:dataTable>
+
+
+
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

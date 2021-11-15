@@ -1,0 +1,245 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template.xhtml">
+
+
+	<f:metadata>
+		<o:viewParam name="pedido" value="#{detalhesPedido.id}" />
+		<f:event listener="#{detalhesPedido.inicializar}" type="preRenderView" />
+	</f:metadata>
+
+
+	<ui:define name="content">
+		<h:form id="frm">
+			<div class="card" style="background-color: #87CEEB">
+				<div class="card">
+					<div class="row">
+						<div class="col-sm-8">
+							<h3>Detalhes do pedido</h3>
+							<div class="row">
+
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Código :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{detalhesPedido.pedido.id}" />
+
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Funcionário :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel
+										value="#{detalhesPedido.pedido.funcionario.nome}" />
+
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Cliente :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{detalhesPedido.pedido.cliente.nome}"
+										rendered="#{detalhesPedido.pedido.cliente != null}" />
+									<p:outputLabel value="Não informado"
+										rendered="#{detalhesPedido.pedido.cliente == null}" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Data :" />
+									</strong>
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{detalhesPedido.pedido.data}">
+										<f:convertDateTime pattern="dd/MM/yyyy"
+											timeZone="America/Fortaleza" />
+									</p:outputLabel>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Valor total :" />
+									</strong>
+
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="R$ #{detalhesPedido.pedido.valorTotal}" />
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Status :" />
+									</strong>
+
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel value="#{detalhesPedido.pedido.status}" />
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel value="Observação cliente :" />
+									</strong>
+
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel
+										value="#{detalhesPedido.pedido.observacaoCliente}"
+										rendered="#{detalhesPedido.pedido.observacaoCliente!=null}" />
+									<p:outputLabel value="N/A"
+										rendered="#{detalhesPedido.pedido.observacaoCliente==null}" />
+
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-4">
+									<strong> <p:outputLabel
+											value="Observação funcionário :" />
+									</strong>
+
+								</div>
+								<div class="col-sm-2">
+									<p:outputLabel
+										value="#{detalhesPedido.pedido.observacaoFuncionario}"
+										rendered="#{detalhesPedido.pedido.observacaoFuncionario!=null}" />
+									<p:outputLabel value="N/A"
+										rendered="#{detalhesPedido.pedido.observacaoFuncionario==null}" />
+
+								</div>
+							</div>
+
+						</div>
+
+						<div class="col-sm-4">
+							<div class="ui-g dashboard">
+
+								<div class="card timeline ui-fluid">
+									<div class="ui-g">
+
+										<h:panelGroup
+											rendered="#{detalhesPedido.pedido.status == 'PAGO'}">
+											<div class="ui-g-3">
+
+												<span class="event-time"><p:outputLabel
+														value="#{detalhesPedido.pedido.data}">
+														<f:convertDateTime pattern="HH:mm"
+															timeZone="America/Fortaleza" />
+													</p:outputLabel></span> <i class="material-icons" style="color: #9c27b0">payment</i>
+											</div>
+											<div class="ui-g-9">
+												<span class="event-owner" style="color: #9c27b0">Pagamento</span>
+												<span class="event-text">Funcionário:
+													#{detalhesPedido.pedido.funcionario.nome}</span>
+											</div>
+										</h:panelGroup>
+
+										<ui:repeat var="ip" value="#{detalhesPedido.pedido.produtos}">
+
+
+
+											<div class="ui-g-3">
+												<span class="event-time"><p:outputLabel
+														value="#{ip.data}">
+														<f:convertDateTime pattern="HH:mm"
+															timeZone="America/Fortaleza" />
+													</p:outputLabel></span> <i class="material-icons" style="color: #FFC107">shopping_cart</i>
+											</div>
+											<div class="ui-g-9">
+												<span class="event-owner" style="color: #FFC107">Adição
+													item ao pedido</span> <span class="event-text">Funcionário
+													: #{ip.funcionario == null ? 'N/A' : ip.funcionario.nome}</span>
+											</div>
+
+										</ui:repeat>
+
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+
+				<p:dataTable reflow="true" value="#{detalhesPedido.pedido.produtos}"
+					rowIndexVar="rowIndex"
+					rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+					var="ip" paginator="true">
+					<p:column headerText="Descrição">
+						<p:outputLabel value="#{ip.produto.descricao}" />
+					</p:column>
+
+					<p:column headerText="Data">
+						<p:outputLabel value="#{ip.data}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+								timeZone="America/Fortaleza" />
+						</p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Valor">
+						<p:outputLabel value="R$ #{ip.valorUnitario}" />
+					</p:column>
+
+					<p:column headerText="Quantidade">
+						<p:outputLabel value="#{ip.quantidade}" />
+					</p:column>
+				</p:dataTable>
+
+				<br />
+				<h:panelGroup
+					rendered="#{detalhesPedido.pedido.enderecoEntrega != null}">
+					<div class="card">
+						<h4>Endereço de entrega</h4>
+						<p:dataTable value="#{detalhesPedido.pedido.enderecoEntrega}"
+							var="e" reflow="true">
+
+							<p:column headerText="Descrição">
+								<p:outputLabel value="#{e.descricao}" />
+							</p:column>
+							<p:column headerText="Rua">
+								<p:outputLabel value="#{e.rua}" />
+							</p:column>
+							<p:column headerText="Bairro">
+								<p:outputLabel value="#{e.bairro}" />
+							</p:column>
+							<p:column headerText="Número">
+								<p:outputLabel value="#{e.numero}" />
+							</p:column>
+							<p:column headerText="Complemento">
+								<p:outputLabel value="#{e.complemento}" />
+							</p:column>
+							<p:column headerText="Cep">
+								<p:outputLabel value="#{e.cep}" />
+							</p:column>
+
+						</p:dataTable>
+					</div>
+
+
+				</h:panelGroup>
+				<br />
+				<p:commandButton value="Imprimir" type="button" icon="ui-icon-print"
+					style="display:block;margin-bottom: 20px">
+					<p:printer target="frm" />
+				</p:commandButton>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

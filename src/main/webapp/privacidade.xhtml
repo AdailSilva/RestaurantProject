@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="content">
+
+
+
+		<h:form id="frm">
+
+			<div class="card">
+				<p:messages closable="true" />
+				<h3 class="box-title">Alteração de senha</h3>
+
+				<p:panelGrid id="masterPanel" columns="1" layout="grid"
+					styleClass="panelgrid-noborder ui-fluid"
+					style="padding-top: 20px; margin-bottom: 40px;">
+
+					<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+						<p:password id="senha" value="#{privacidadeBean.senhaAntiga}"
+							required="true" />
+						<p:outputLabel for="senha" value="Senha atual" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+						<p:password id="novaSenha" value="#{privacidadeBean.novaSenha}"
+							required="true" match="confirmacaoSenha" />
+						<p:outputLabel for="novaSenha" value="Nova senha" />
+					</h:panelGroup>
+
+					<h:panelGroup styleClass="md-inputfield" style="margin-top:10px;">
+						<p:password id="confirmacaoSenha" required="true" />
+						<p:outputLabel for="confirmacaoSenha" value="Confirmação senha" />
+					</h:panelGroup>
+
+				</p:panelGrid>
+
+				<p:commandButton value="Alterar senha" styleClass="green-btn"
+					process="@form" update="@form"
+					action="#{privacidadeBean.editarSenha}" />
+
+			</div>
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

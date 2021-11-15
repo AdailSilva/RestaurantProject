@@ -1,0 +1,207 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+
+	<f:metadata>
+		<f:event listener="#{detalhesPedido.inicializarTelaPedido}"
+			type="preRenderView" />
+	</f:metadata>
+
+	<ui:define name="content">
+
+
+
+		<h:form id="frm">
+			<p:growl id="growl" showDetail="false" sticky="true" />
+
+
+			<div class="card">
+				<p:messages closable="true" />
+
+
+				<h3>Pesquisa de pedidos</h3>
+
+				<div class="container-fluid">
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Código :" />
+						</div>
+						<div class="col-md-2">
+							<p:inputText styleClass="larguraMax"
+								value="#{detalhesPedido.filter.codigo}" />
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Cliente :" />
+						</div>
+						<div class="col-md-2">
+							<p:selectOneMenu styleClass="larguraMax" filter="true"
+								value="#{detalhesPedido.filter.cliente}">
+								<f:selectItems itemLabel="#{c.nome} #{c.sobrenome} "
+									itemValue="#{c}" value="#{detalhesPedido.clientes}" var="c" />
+								<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Funcionário :" />
+						</div>
+						<div class="col-md-2">
+							<p:selectOneMenu styleClass="larguraMax" filter="true"
+								value="#{detalhesPedido.filter.funcionario}">
+								<f:selectItems itemLabel="#{c.nome} #{c.sobrenome} "
+									itemValue="#{c}" value="#{detalhesPedido.funcionarios}" var="c" />
+								<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Status :" />
+						</div>
+						<div class="col-md-2">
+							<p:selectOneMenu styleClass="larguraMax"
+								value="#{detalhesPedido.filter.status}">
+								<f:selectItems itemValue="#{s}" itemLabel="#{s}" var="s"
+									value="#{detalhesPedido.filter.statusList()}" />
+								<f:selectItem noSelectionOption="true" itemLabel="Selecione" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+
+
+
+
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Delivery ? " />
+						</div>
+						<div class="col-md-2">
+							<p:selectBooleanCheckbox
+								value="#{detalhesPedido.filter.delivery}" />
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 5px;">
+
+						<div class="col-md-2">
+							<p:outputLabel value="Valor :" for="txtValor" />
+						</div>
+						<div class="col-md-2">
+							<h:panelGrid columns="3">
+								<p:inputText id="txtValor" styleClass="larguraMax moeda"
+									style="display:inline;"
+									value="#{detalhesPedido.filter.valorDe}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</p:inputText>
+								<p:outputLabel value=" a "
+									style="margin-left:3px;margin-right:3px;" />
+								<p:inputText id="txtValor2" styleClass="larguraMax moeda"
+									style="display:inline;"
+									value="#{detalhesPedido.filter.valorAte}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+								</p:inputText>
+							</h:panelGrid>
+						</div>
+
+					</div>
+
+
+
+
+
+					<p:commandButton value="Pesquisar" icon="ui-icon-search"
+						styleClass="green-btn" process="@form" update="@form"
+						action="#{detalhesPedido.visualizar()}" />
+
+					<br /> <br />
+					<p:dataTable paginator="true" rows="10" reflow="true" id="pedidos"
+						rowIndexVar="rowIndex"
+						rowStyleClass="#{(rowIndex mod 2) eq 0 ? 'colored' : 'highlight2'}"
+						value="#{detalhesPedido.pedidos}" var="p">
+						<p:column headerText="Mesa">
+							<h:panelGroup rendered="#{p.mesa != null}">
+								<p:outputLabel value="#{p.mesa}" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.mesa == null}">
+								<p:outputLabel value="n/a" />
+							</h:panelGroup>
+						</p:column>
+						<p:column headerText="Valor total">
+							<p:outputLabel value="R$ #{p.valorTotal}" />
+						</p:column>
+						<p:column headerText="Data">
+							<p:outputLabel value="#{p.data}">
+								<f:convertDateTime pattern="dd/MM/yyyy hh:mm"
+									timeZone="America/Fortaleza" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Status">
+							<h:panelGroup rendered="#{p.status == 'ANDAMENTO'}">
+								<p:button styleClass="amber-btn larguraMax" value="Andamento "
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.status == 'CANCELADO'}">
+								<p:button styleClass="red-btn larguraMax"
+									outcome="detalhesPedido" value="Cancelado">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.status == 'PAGO'}">
+								<p:button styleClass="green-btn larguraMax" value="Pago"
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{p.status == 'ENVIADO'}">
+								<p:button styleClass="cyan-btn larguraMax" value="Enviado"
+									outcome="detalhesPedido">
+									<f:param name="pedido" value="#{p.id}" />
+								</p:button>
+
+							</h:panelGroup>
+
+
+						</p:column>
+
+
+
+						<p:column headerText="Funcionário">
+							<p:outputLabel value="#{p.funcionario.nome}" />
+						</p:column>
+						<p:column headerText="Delivery">
+							<h:panelGroup rendered="#{p.delivery==false}">
+								<p:commandButton styleClass="red-btn larguraMax" value="Não" />
+							</h:panelGroup>
+							<h:panelGroup rendered="#{p.delivery==true}">
+								<p:commandButton styleClass="green-btn larguraMax" value="Sim" />
+							</h:panelGroup>
+
+						</p:column>
+
+					</p:dataTable>
+
+
+				</div>
+			</div>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
